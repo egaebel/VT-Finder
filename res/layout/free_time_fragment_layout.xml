@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linear_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:weightSum="1"
+    tools:context=".FreeTimeFragment" 
+    style="@style/AppTheme" >
+    
+    <com.viewpagerindicator.TitlePageIndicator
+        android:id="@+id/titles"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_weight="0.27" />
+    <android.support.v4.view.ViewPager
+        android:id="@+id/free_time_day_pager"
+        android:layout_width="fill_parent"
+        android:layout_height="284dp"
+        android:layout_weight="0.58" />
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_weight="0.07" >
+        <Button
+            android:id="@+id/getScheduleButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:onClick="getScheduleClicked"
+            android:text="@string/get_schedule" />
+        <Button
+            android:id="@+id/compareWithFriends"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/getScheduleButton"
+            android:onClick="compareWithFriendsClicked"
+            android:text="@string/compare_with_a_friend" />
+    </RelativeLayout>
+</LinearLayout>

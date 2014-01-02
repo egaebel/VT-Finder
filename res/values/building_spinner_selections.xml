@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="buildings_array">
+		<item>MCB</item>
+		<item>DER</item>
+		<item>HAHNN</item>
+		<item>HAHNS</item>
+		<item>TORG</item>
+		<item>RAND</item>
+		<item>HOLD</item>
+		<item>NOR</item>
+		<item>HAN</item>
+		<item>WHIT</item>
+		<item>PAT</item>
+		<item>CO</item>
+		<item>DAV</item>
+		<item>ROB</item>
+		<item>PAM</item>
+		<item>SURGE</item>
+		<item>MAJWM</item>
+		<item>SQUIR</item>
+		<item>WLH</item>
+		<item>EMPOR</item>
+		<item>WAL</item>
+		<item>LITRV</item>
+		<item>ENGEL</item>
+		<item>GYM</item>
+		<item>FEM</item>
+		<item>AGNEW</item>
+		<item>BURCH</item>
+		<item>BUR</item>
+		<item>DURHM</item>
+		<item>HEND</item>
+		<item>HUTCH</item>
+		<item>JCH</item>
+		<item>LANE</item>
+		<item>LATH</item>
+		<item>LIBR</item>
+		<item>LIBR</item>
+		<item>PRICE</item>
+		<item>SANDY</item>
+		<item>SAUND</item>
+		<item>SEITZ</item>
+		<item>SHANK</item>
+		<item>SHULTZ</item>
+		<item>SMYTH</item>
+		<item>SQUIR</item>
+		<item>WMS</item>        
+    </string-array>
+</resources>

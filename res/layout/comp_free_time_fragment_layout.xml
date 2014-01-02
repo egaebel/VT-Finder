@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linear_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:weightSum="1"
+    tools:context=".FreeTimeFragment" 
+    style="@style/AppTheme" >
+    
+    <com.viewpagerindicator.TitlePageIndicator
+        android:id="@+id/titles"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_weight="0.27" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/free_time_day_pager"
+        android:layout_width="fill_parent"
+        android:layout_height="284dp"
+        android:layout_weight="0.58" />
+
+</LinearLayout>

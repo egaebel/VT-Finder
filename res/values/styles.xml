@@ -1,0 +1,11 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="AppTheme" parent="android:Theme.Light"> 
+	    <item name="android:windowNoTitle">true</item>
+	    <item name="android:windowBackground">@color/maroon</item>
+	    <item name="android:background">@color/maroon</item>
+	    <item name="android:overScrollFooter">@color/maroon</item>
+	    <item name="android:drawable">@color/maroon</item>
+    </style>
+
+</resources>

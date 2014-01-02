@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/AppTheme"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:weightSum="1">
+    <ListView
+        android:id="@+id/@android:id/list"
+        style="@style/AppTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1.00" />
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="66dp" >
+        <Button
+            android:id="@+id/viewExamSchedule"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:onClick="getFinalsScheduleClicked"
+            android:text="@string/get_exam_schedule" />
+    </RelativeLayout>
+
+</LinearLayout>
