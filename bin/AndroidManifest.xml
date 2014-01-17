@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="vt.finder"
-    android:versionCode="25"
+    android:versionCode="26"
     android:versionName="3.5" >
 
     <uses-sdk
@@ -11,14 +11,16 @@
 		android:name="android.test.InstrumentationTestRunner">
 	</instrumentation>
 
-	<!-- TELEPHONY DEPENDENCIES ____________________________________________________-->
+	<!-- PHONE ONLY DEPENDENCIES ___________________________________________________-->
 	<uses-feature android:name="android.hardware.telephony" android:required="false" />
 	<uses-feature android:name="android.telephony" android:required="false" />
+	<uses-feature android:name="android.hardware.location" android:required="false" />
+	<uses-feature android:name="android.hardware.location.gps" android:required="false" />
 	<!--____________________________________________________________________________-->
 	<uses-feature android:name="android.hardware.wifi" android:required="false" />
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" android:required="false" />
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" android:required="false" />
+	<uses-permission android:name="android.permission.INTERNET" android:required="false" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:required="false" />
 	<uses-permission android:name="android.permission.READ_CONTACTS" android:required="false" />
