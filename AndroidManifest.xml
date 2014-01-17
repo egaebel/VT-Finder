@@ -1,19 +1,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="vt.finder"
-    android:versionCode="24"
+    android:versionCode="25"
     android:versionName="3.5" >
 
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="17" />
 
-	<uses-feature android:name="android.hardware.wifi"
-		android:required="true" />
-	
 	<instrumentation android:targetPackage="vt.finder"
 		android:name="android.test.InstrumentationTestRunner">
 	</instrumentation>
 
+	<!-- TELEPHONY DEPENDENCIES ____________________________________________________-->
+	<uses-feature android:name="android.hardware.telephony" android:required="false" />
+	<uses-feature android:name="android.telephony" android:required="false" />
+	<!--____________________________________________________________________________-->
+	<uses-feature android:name="android.hardware.wifi" android:required="false" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 	<uses-permission android:name="android.permission.INTERNET" />

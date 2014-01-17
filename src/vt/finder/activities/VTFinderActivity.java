@@ -1,8 +1,6 @@
 package vt.finder.activities;
 
-import java.io.File;
-import java.util.Observable;
-import java.util.Observer;
+//Internal Imports
 import vt.finder.gui.CourseComm;
 import vt.finder.gui.ExamScheduleFragment;
 import vt.finder.gui.FreeTimeFragment;
@@ -11,7 +9,6 @@ import vt.finder.gui.NoSwipeViewPager;
 import vt.finder.gui.ScheduleFragment;
 import vt.finder.io.PasswordIO;
 import vt.finder.main.BuildingGpsMap;
-import vt.finder.main.SMSHandler;
 import vt.finder.main.ScheduleWaypoint;
 import vt.finder.main.VTFinderService;
 import vt.finder.schedule.Course;
@@ -19,9 +16,19 @@ import vt.finder.schedule.Point;
 import vt.finder.schedule.UserMadeCourse;
 import vt.finder.R;
 import vt.finder.web.BuildingNotFoundException;
+import vt.finder.main.SMSHandler; /* REQUIRES TELEPHONY FEATURES */
+
+//Java Imports
+import java.io.File;
+import java.util.Observable;
+import java.util.Observer;
+
+//ActionBar Sherlock Imports
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+
+//Android Imports
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
