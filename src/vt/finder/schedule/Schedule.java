@@ -11,6 +11,8 @@ import android.util.Log;
  * 
  * @author Ethan Gaebel (egaebel)
  * 
+ * TODO: Finish adding saturday and sunday...functionality should not be affected yet
+ * 
  */
 public class Schedule implements Parcelable {
 
@@ -26,6 +28,10 @@ public class Schedule implements Parcelable {
     private Day thursday;
 
     private Day friday;
+    
+    private Day saturday;
+    
+    private Day sunday;
 
     private Day anyDay;
 
@@ -59,6 +65,8 @@ public class Schedule implements Parcelable {
         wednesday = new Day("Wednesday");
         thursday = new Day("Thursday");
         friday = new Day("Friday");
+        saturday = new Day("Saturday");
+        sunday = new Day("Sunday");
         anyDay = new Day("AnyDay");
 
         whosSchedule = "MySchedule";
@@ -79,6 +87,8 @@ public class Schedule implements Parcelable {
         wednesday = new Day("Wednesday");
         thursday = new Day("Thursday");
         friday = new Day("Friday");
+        saturday = new Day("Saturday");
+        sunday = new Day("Sunday");
         anyDay = new Day("AnyDay");
 
         whosSchedule = scheduleOwner;
@@ -100,6 +110,8 @@ public class Schedule implements Parcelable {
         wednesday = schedule.getWednesday();
         thursday = schedule.getThursday();
         friday = schedule.getFriday();
+        saturday = schedule.getSaturday();
+        sunday = schedule.getSunday();
         anyDay = schedule.getAnyDay();
 
         whosSchedule = schedule.getWhosSchedule();
@@ -133,8 +145,8 @@ public class Schedule implements Parcelable {
      * sets a day by passed in parameter
      * @param name
      *            name of the course
-     * @param subjectCode TODO
-     * @param courseNumber TODO
+     * @param subjectCode the code for the subject (i.e. MATH, CS, HIST, STAT)
+     * @param courseNumber the course number for the subject (i.e. In MATH 4444, the courseNumber is 4444)
      * @param teacherName
      *            name of the teacher of the course
      * @param time
@@ -146,10 +158,13 @@ public class Schedule implements Parcelable {
      *            taught
      */
     public void setDay(String days, String name, 
-            String subjectCode, String courseNumber, 
-            String teacherName, 
-            String beginTime, String endTime, 
-            String building, String room) {
+                        String subjectCode, 
+                        String courseNumber, 
+                        String teacherName, 
+                        String beginTime, 
+                        String endTime, 
+                        String building, 
+                        String room) {
 
         String day = "";
 
@@ -157,6 +172,20 @@ public class Schedule implements Parcelable {
 
             // set day equal to one character denoting a day
             day = days.substring(0, 1);
+            
+            //Handle Saturday & Sunday
+            if (day.equals("S")) {
+                
+                String secondLetterCheck = days.substring(1, 2);
+                //If Sunday
+                if (secondLetterCheck.equals("u")) {
+                    
+                    day += "u";
+                    //Knock off one extra letter
+                    days = days.replaceFirst(day, "");
+                }
+            }
+            
             // eliminate the character that day was set to from days
             days = days.replaceFirst(day, "");
 
@@ -185,6 +214,16 @@ public class Schedule implements Parcelable {
                 friday.addCourse(name, subjectCode, courseNumber, teacherName, beginTime, endTime,
                         building, room);
             }
+            else if (day.equals("S")) {
+                
+                saturday.addCourse(name, subjectCode, courseNumber, teacherName, beginTime, endTime,
+                        building, room);
+            }
+            else if (day.equals("Su")) {
+                
+                sunday.addCourse(name, subjectCode, courseNumber, teacherName, beginTime, endTime,
+                        building, room);
+            }
             else if (day.equals("TBA")) {
 
                 anyDay.addCourse(name, subjectCode, courseNumber, teacherName, beginTime, endTime,
@@ -207,6 +246,8 @@ public class Schedule implements Parcelable {
      *      W = wednesday
      *      R = thursday
      *      F = friday
+     *      S = saturday
+     *      Su = sunday
      *      else = anyDay
      */
     public void setCourseInDays(Course course, String days) {
@@ -228,6 +269,15 @@ public class Schedule implements Parcelable {
             else if (days.substring(i, i + 1).equals("F")) {
                 friday.addCourse(course);
             }
+            else if (days.substring(i, i + 1).equals("S")) {
+                if (days.substring(i + 1, i + 2).equals("u")) {
+                    sunday.addCourse(course);
+                    i++;
+                }
+                else {
+                    saturday.addCourse(course);
+                }
+            }
             else {
                 anyDay.addCourse(course);
                 break;
@@ -243,7 +293,9 @@ public class Schedule implements Parcelable {
      * 2 = wednesday
      * 3 = thursday
      * 4 = friday
-     * 5 = anyDay
+     * 5 = saturday
+     * 6 = sunday
+     * 7 = anyDay
      * 
      * @param index the index of the day to select, 
      *      0 = monday
@@ -251,7 +303,9 @@ public class Schedule implements Parcelable {
      *      2 = wednesday
      *      3 = thursday
      *      4 = friday
-     *      5 = anyDay
+     *      5 = saturday
+     *      6 = sunday
+     *      7 = anyDay
      * @return the Day object corresponding to the passed in index
      */
     public Day getDay(int index) {
@@ -263,7 +317,9 @@ public class Schedule implements Parcelable {
             case 2: return wednesday;
             case 3: return thursday;
             case 4: return friday;
-            case 5: return anyDay;
+            case 5: return saturday;
+            case 6: return sunday;
+            case 7: return anyDay;
             default: return null;
         }
     }
@@ -303,10 +359,28 @@ public class Schedule implements Parcelable {
 
                 today = friday;
                 break;
+                
+            case Calendar.SATURDAY:
+                
+                today = saturday;
+                break;
+                
+            case Calendar.SUNDAY:
+                
+                today = sunday;
+                break;
 
             default:
 
-                if (anyDay.getList().size() > 0) {
+                if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY && saturday.getList().size() > 0) {
+                    
+                    today = saturday;
+                }
+                else if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY && sunday.getList().size() > 0) {
+                    
+                    today = sunday;
+                }
+                else if (anyDay.getList().size() > 0) {
 
                     today = anyDay;
                 }
@@ -360,6 +434,14 @@ public class Schedule implements Parcelable {
       
                 return getLeftOfToday();
             }
+            else if (!today.hasCourses() && today.getThisDay().equalsIgnoreCase("saturday")) {
+                
+                return getLeftOfToday();
+            }
+            else if (!today.hasCourses() && today.getThisDay().equalsIgnoreCase("sunday")) {
+                
+                return getLeftOfToday();
+            }
         }
         else {
 
@@ -407,7 +489,15 @@ public class Schedule implements Parcelable {
 
             // today is the day after the old today
             today = days[index + 1];
-            if (!today.hasCourses() && today.getThisDay().equalsIgnoreCase("anyday")) {
+            if (!today.hasCourses() && today.getThisDay().equalsIgnoreCase("saturday")) {
+                
+                return getRightOfToday();
+            }
+            else if (!today.hasCourses() && today.getThisDay().equalsIgnoreCase("sunday")) {
+                
+                return getRightOfToday();
+            }
+            else if (!today.hasCourses() && today.getThisDay().equalsIgnoreCase("anyday")) {
                 
                 return getRightOfToday();
             }
@@ -423,28 +513,7 @@ public class Schedule implements Parcelable {
      * @return the index of the day that today is.
      */
     public int getTodayIndex() {
-        
-        if (today.equals(monday)) {
-            return 0;
-        }
-        else if (today.equals(tuesday)) {
-            return 1;
-        }
-        else if (today.equals(wednesday)) {
-            return 2;
-        }
-        else if (today.equals(thursday)) {            
-            return 3;
-        }
-        else if (today.equals(friday)) {            
-            return 4;
-        }
-        else if (today.equals(anyDay)) {
-            return 5;
-        }
-        else {
-            return -1;
-        }
+        return getIndexFromDay(today);
     }
     
 
@@ -477,9 +546,17 @@ public class Schedule implements Parcelable {
             
             return 4;
         }
-        else if (theDay.equals(anyDay)) {
+        else if (theDay.equals(saturday)) {
             
             return 5;
+        }
+        else if (theDay.equals(sunday)) {
+            
+            return 6;
+        }
+        else if (theDay.equals(anyDay)) {
+            
+            return 7;
         }
         else {
             
@@ -496,9 +573,13 @@ public class Schedule implements Parcelable {
 
         boolean value;
 
-        if (monday.getList().isEmpty() && tuesday.getList().isEmpty()
+        if (monday.getList().isEmpty() 
+                && tuesday.getList().isEmpty()
                 && wednesday.getList().isEmpty()
-                && thursday.getList().isEmpty() && friday.getList().isEmpty()
+                && thursday.getList().isEmpty() 
+                && friday.getList().isEmpty()
+                && saturday.getList().isEmpty()
+                && sunday.getList().isEmpty()
                 && anyDay.getList().isEmpty()) {
 
             value = true;
@@ -518,7 +599,7 @@ public class Schedule implements Parcelable {
      */
     public Day[] daysToArray() {
 
-        Day[] days = { monday, tuesday, wednesday, thursday, friday, anyDay };
+        Day[] days = { monday, tuesday, wednesday, thursday, friday, saturday, sunday, anyDay };
 
         return days;
     }
@@ -536,7 +617,9 @@ public class Schedule implements Parcelable {
         wednesday = days[2];
         thursday = days[3];
         friday = days[4];
-        anyDay = days[5];
+        saturday = days[5];
+        sunday = days[6];
+        anyDay = days[7];
     }
 
     /**
@@ -549,6 +632,8 @@ public class Schedule implements Parcelable {
         wednesday.sortCourses();
         thursday.sortCourses();
         friday.sortCourses();
+        saturday.sortCourses();
+        sunday.sortCourses();
     }
     
     /**
@@ -566,6 +651,8 @@ public class Schedule implements Parcelable {
         String returnString = "<Schedule>" + "\n<Owner>" + whosSchedule
                 + "</Owner>" + monday.toXML() + tuesday.toXML()
                 + wednesday.toXML() + thursday.toXML() + friday.toXML()
+                //TODO: Add parser support before adding
+                + saturday.toXML() + sunday.toXML()
                 + anyDay.toXML() + "\n</Schedule>";
 
         return returnString;
@@ -578,10 +665,12 @@ public class Schedule implements Parcelable {
 
         if (other instanceof Schedule) {
 
-            for (int i = 0; i < 6; i++) {
+            Day[] theseDays = this.daysToArray();
+            Day[] otherDays = ((Schedule) other).daysToArray();
+            
+            for (int i = 0; i < theseDays.length; i++) {
 
-                if (this.daysToArray()[i].equals(((Schedule) other)
-                        .daysToArray()[i])) {
+                if (theseDays[i].equals(otherDays[i])) {
 
                     value = true;
                 }
@@ -654,7 +743,7 @@ public class Schedule implements Parcelable {
         Schedule freeTime = new Schedule();
         
         //Loop through each day in this schedule and the freeTime schedule.
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 7; i++) {
             
             freeTime.setDay(i, this.getDay(i).findFreeTime());
         }
@@ -678,15 +767,18 @@ public class Schedule implements Parcelable {
             case 2: wednesday = day; break;
             case 3: thursday = day; break;
             case 4: friday = day; break;
-            case 5: anyDay = day; break;
+            case 5: saturday = day; break;
+            case 6: sunday = day; break;
+            case 7: anyDay = day; break;
             default: return false;
         }
         
         return true;
     }
 
-    // ~PARCELABLE
-    // ~STUFF----------------------------------------------------------------------
+    // ~----------------------------------------------------------------------------------------
+    // ~PARCELABLE------------------------------------------------------------------------------
+    // ~STUFF-----------------------------------------------------------------------------------
     // ~----------------------------------------------------------------------------------------
 
     public int describeContents() {
@@ -701,6 +793,8 @@ public class Schedule implements Parcelable {
         dest.writeParcelable(wednesday, flags);
         dest.writeParcelable(thursday, flags);
         dest.writeParcelable(friday, flags);
+        dest.writeParcelable(saturday, flags);
+        dest.writeParcelable(sunday, flags);
         dest.writeParcelable(anyDay, flags);
         dest.writeParcelable(today, flags);
         dest.writeString(whosSchedule);
@@ -731,6 +825,8 @@ public class Schedule implements Parcelable {
         wednesday = in.readParcelable(Schedule.class.getClassLoader());
         thursday = in.readParcelable(Schedule.class.getClassLoader());
         friday = in.readParcelable(Schedule.class.getClassLoader());
+        saturday = in.readParcelable(Schedule.class.getClassLoader());
+        sunday = in.readParcelable(Schedule.class.getClassLoader());
         anyDay = in.readParcelable(Schedule.class.getClassLoader());
         today = in.readParcelable(Schedule.class.getClassLoader());
         whosSchedule = in.readString();
@@ -841,5 +937,37 @@ public class Schedule implements Parcelable {
     public Day getAnyDay() {
 
         return anyDay;
+    }
+
+    /**
+     * @return the saturday
+     */
+    public Day getSaturday() {
+
+        return saturday;
+    }
+
+    /**
+     * @param saturday the saturday to set
+     */
+    public void setSaturday(Day saturday) {
+
+        this.saturday = saturday;
+    }
+
+    /**
+     * @return the sunday
+     */
+    public Day getSunday() {
+
+        return sunday;
+    }
+
+    /**
+     * @param sunday the sunday to set
+     */
+    public void setSunday(Day sunday) {
+
+        this.sunday = sunday;
     }
 }

@@ -78,15 +78,6 @@
             android:layout_marginLeft="24dp"
             android:ems="10" />
 
-        <EditText
-            android:id="@+id/endTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/TextView04"
-            android:layout_marginLeft="24dp"
-            android:ems="10" />
-
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
@@ -100,12 +91,11 @@
         <Spinner
             android:id="@+id/building"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:layout_alignParentLeft="true"
             android:layout_alignRight="@+id/TextView01"
             android:layout_below="@+id/textView2"
-            android:layout_marginLeft="24dp"
-             />
+            android:layout_marginLeft="24dp" />
 
         <TextView
             android:id="@+id/TextView06"
@@ -126,35 +116,40 @@
             android:layout_marginLeft="24dp"
             android:ems="10" />
 
+        <TextView
+            android:id="@+id/TextView03"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/teacherName"
+            android:layout_alignRight="@+id/TextView05"
+            android:layout_below="@+id/teacherName"
+            android:text="Start Time:"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/startTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/TextView03"
+            android:layout_alignRight="@+id/wednesdayBox"
+            android:layout_below="@+id/TextView03"
+            android:ems="10"
+            android:text="" />
+
         <CheckBox
             android:id="@+id/mondayBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
+            android:layout_below="@+id/roomNumber"
             android:text="M" />
-
-        <CheckBox
-            android:id="@+id/sundayBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:text="Su" />
-
-        <CheckBox
-            android:id="@+id/saturdayBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@+id/fridayBox"
-            android:text="Sa" />
 
         <CheckBox
             android:id="@+id/tuesdayBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_alignBaseline="@+id/mondayBox"
+            android:layout_alignBottom="@+id/mondayBox"
             android:layout_toRightOf="@+id/mondayBox"
             android:text="T" />
 
@@ -162,50 +157,64 @@
             android:id="@+id/wednesdayBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_toLeftOf="@+id/thursdayBox"
+            android:layout_alignBaseline="@+id/tuesdayBox"
+            android:layout_alignBottom="@+id/tuesdayBox"
+            android:layout_toRightOf="@+id/textView2"
             android:text="W" />
 
         <CheckBox
             android:id="@+id/thursdayBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
+            android:layout_alignBaseline="@+id/wednesdayBox"
+            android:layout_alignBottom="@+id/wednesdayBox"
+            android:layout_toRightOf="@+id/wednesdayBox"
             android:text="Th" />
 
         <CheckBox
             android:id="@+id/fridayBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@+id/thursdayBox"
+            android:layout_alignBaseline="@+id/thursdayBox"
+            android:layout_alignBottom="@+id/thursdayBox"
+            android:layout_alignRight="@+id/roomNumber"
             android:text="F" />
 
-        <TextView
-            android:id="@+id/TextView03"
+        <CheckBox
+            android:id="@+id/sundayBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/teacherName"
-            android:layout_below="@+id/teacherName"
-            android:text="Start Time:"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:layout_alignBaseline="@+id/saturdayBox"
+            android:layout_alignBottom="@+id/saturdayBox"
+            android:layout_alignParentRight="true"
+            android:text="Su" />
+
+        <CheckBox
+            android:id="@+id/saturdayBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/fridayBox"
+            android:layout_alignBottom="@+id/fridayBox"
+            android:layout_toRightOf="@+id/fridayBox"
+            android:text="S" />
 
         <TextView
             android:id="@+id/TextView04"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/endTime"
-            android:layout_below="@+id/beginTime"
+            android:layout_above="@+id/startTime"
+            android:layout_toLeftOf="@+id/saturdayBox"
+            android:layout_toRightOf="@+id/textView1"
             android:text="End Time:"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <EditText
-            android:id="@+id/beginTime"
+            android:id="@+id/endTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/endTime"
-            android:layout_below="@+id/TextView03"
+            android:layout_alignLeft="@+id/TextView04"
+            android:layout_alignRight="@+id/TextView04"
+            android:layout_below="@+id/TextView04"
             android:ems="10" />
 
     </RelativeLayout>

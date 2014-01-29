@@ -92,6 +92,7 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
     		"\n•Just click \'Compare with a Friend\' in the \'SCHEDULE\' view or the \'FREE TIME\' view and then select someone from your contacts list to swap schedules with. " +
     		"They\'ll be informed of your request, and prompted to accept or decline your offer to exchange schedules. If they accept, both of your schedules will then be" +
     		" exchanged using text messages, compared for free time, and loaded into VT Finder.";
+    
     //~Request Codes
     /**
      * request code for switching to the Contact list
@@ -249,10 +250,6 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
             
             bar.setSelectedNavigationItem(savedInstanceState.getInt("tab", 1));
         }
-        
-        // check to see if Schedule was loaded, and sets up listview parameters
-        // in either case
-
 
         //start service
         Intent service = new Intent(this.getBaseContext(),
@@ -390,7 +387,9 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
         final EditText courseName = (EditText) layout.findViewById(R.id.courseName);
         final EditText courseCode = (EditText) layout.findViewById(R.id.courseCode);
         final EditText teacherName = (EditText) layout.findViewById(R.id.teacherName);
-        final EditText beginTime = (EditText) layout.findViewById(R.id.beginTime);
+        Log.i(TAG, "right before the crash......fucking hell.....");
+        Log.i(TAG, "the value of the result == " + layout.findViewById(R.id.startTime));
+        final EditText beginTime = (EditText) layout.findViewById(R.id.startTime);
         final EditText endTime = (EditText) layout.findViewById(R.id.endTime);
         final EditText roomNumber = (EditText) layout.findViewById(R.id.roomNumber);
         
@@ -434,7 +433,7 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
         
         alert.setPositiveButton("Submit",
                 new DialogInterface.OnClickListener() {
-
+                    
                     public void onClick(DialogInterface dialog, int whichButton) {
                         
                         String[] courseCodeSplit = courseCode.getText().toString().trim().split(" ");
@@ -496,6 +495,15 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
                                 
                                 daysString += "F";
                             }
+                            else if (saturdayBox.isChecked()) {
+                                
+                                //daysString += "S";
+                            }
+                            else if (sundayBox.isChecked()) {
+                                
+                                //daysString += "Su";
+                            }
+                            //TODO: Add other days (Saturday & Sunday)
                             
                             String subjectCode = "";
                             String courseNumber = "";
@@ -505,12 +513,18 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
                             }
                             
                             UserMadeCourse course = new UserMadeCourse(
-                                    courseName.getText().toString(), teacherName.getText().toString(), 
-                                    subjectCode, courseNumber, 
-                                    beginTime.getText().toString(), endTime.getText().toString(),
-                                    buildingString.toString(), roomNumber.getText().toString());
+                                                            courseName.getText().toString(), 
+                                                            teacherName.getText().toString(), 
+                                                            subjectCode, 
+                                                            courseNumber, 
+                                                            beginTime.getText().toString(), 
+                                                            endTime.getText().toString(),
+                                                            buildingString.toString(), 
+                                                            roomNumber.getText().toString());
                            
+                            //Add and refresh
                             model.addUserMadeCourse(course, daysString);
+                            setupScheduleListViews();
                         }
                     }
                 });
@@ -958,6 +972,12 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
                                 "The building data is not stored, " +
                                 "please submit crash report so I can add it!", 
                                 Toast.LENGTH_LONG).show();
+                        try {
+                            Thread.sleep(5000);
+                        }
+                        catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         //I CRASH IT MYSELF!!
                         Object crash = null;
                         crash.toString();

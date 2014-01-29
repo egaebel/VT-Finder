@@ -133,6 +133,8 @@ public class ScheduleWaypoint extends Observable implements Parcelable {
      */
     public void addUserMadeCourse(UserMadeCourse userMadeCourse, String daysString) {
         schedule.setCourseInDays(userMadeCourse, daysString);
+        Log.i(TAG, "THE SCHEDULE AFTER ADDING THE USERMADE COURSE");
+        Log.i(TAG, schedule.toXML());
     }
     
     /**
@@ -274,8 +276,7 @@ public class ScheduleWaypoint extends Observable implements Parcelable {
      * course object in the finalsList ArrayList<course>
      */
     public void sortFinalsList() {
-        System.out.println("SORTING FINALS LIST");
-        System.out.println(finalsList.toString());
+        
         Course course = null;
         int j = 0;
         for (int i = 1; i < finalsList.size(); i++) {

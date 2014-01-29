@@ -1107,10 +1107,10 @@ containing a value of this type.
     public static final class id {
         public static final int TextView01=0x7f040036;
         public static final int TextView02=0x7f040038;
-        public static final int TextView03=0x7f040046;
-        public static final int TextView04=0x7f04003a;
+        public static final int TextView03=0x7f04003e;
+        public static final int TextView04=0x7f040047;
         public static final int TextView05=0x7f040032;
-        public static final int TextView06=0x7f04003d;
+        public static final int TextView06=0x7f04003c;
         public static final int abs__action_bar=0x7f040025;
         public static final int abs__action_bar_container=0x7f040024;
         public static final int abs__action_bar_subtitle=0x7f040014;
@@ -1141,8 +1141,7 @@ containing a value of this type.
         public static final int abs__titleDivider=0x7f04001f;
         public static final int abs__up=0x7f04000e;
         public static final int addCourse=0x7f040058;
-        public static final int beginTime=0x7f040047;
-        public static final int building=0x7f04003c;
+        public static final int building=0x7f04003b;
         public static final int compareWithFriends=0x7f04004b;
         public static final int content_view=0x7f04002f;
         public static final int courseCode=0x7f040037;
@@ -1151,7 +1150,7 @@ containing a value of this type.
         public static final int endTime=0x7f040033;
         public static final int fall=0x7f04005a;
         public static final int free_time_day_pager=0x7f04002d;
-        public static final int fridayBox=0x7f040042;
+        public static final int fridayBox=0x7f040044;
         public static final int getScheduleButton=0x7f04004a;
         public static final int handshakeResponseDialog=0x7f04004c;
         public static final int homeAsUp=0x7f040009;
@@ -1161,7 +1160,7 @@ containing a value of this type.
         public static final int listMode=0x7f040005;
         public static final int loginBox=0x7f04004f;
         public static final int menu_settings=0x7f04005e;
-        public static final int mondayBox=0x7f04003f;
+        public static final int mondayBox=0x7f040041;
         public static final int none=0x7f040000;
         public static final int normal=0x7f040004;
         public static final int pager=0x7f04002a;
@@ -1170,8 +1169,8 @@ containing a value of this type.
         public static final int quick_start_message=0x7f040056;
         public static final int relativeLayout1=0x7f040048;
         public static final int remoteTextView=0x7f040031;
-        public static final int roomNumber=0x7f04003e;
-        public static final int saturdayBox=0x7f040041;
+        public static final int roomNumber=0x7f04003d;
+        public static final int saturdayBox=0x7f040046;
         public static final int savePasswordCheck=0x7f040050;
         public static final int schedule_day_pager=0x7f04002e;
         public static final int semesters=0x7f040059;
@@ -1181,24 +1180,25 @@ containing a value of this type.
         public static final int showHome=0x7f040008;
         public static final int showTitle=0x7f04000a;
         public static final int spring=0x7f04005b;
+        public static final int startTime=0x7f04003f;
         public static final int summer1=0x7f04005c;
         public static final int summer2=0x7f04005d;
-        public static final int sundayBox=0x7f040040;
+        public static final int sundayBox=0x7f040045;
         public static final int tabMode=0x7f040006;
         public static final int teacherName=0x7f040039;
         public static final int textView1=0x7f040034;
-        public static final int textView2=0x7f04003b;
-        public static final int thursdayBox=0x7f040045;
+        public static final int textView2=0x7f04003a;
+        public static final int thursdayBox=0x7f040043;
         public static final int titles=0x7f04002c;
         public static final int toClassButton=0x7f040057;
         public static final int triangle=0x7f040001;
-        public static final int tuesdayBox=0x7f040043;
+        public static final int tuesdayBox=0x7f040042;
         public static final int underline=0x7f040002;
         public static final int useLogo=0x7f040007;
         public static final int userDialog=0x7f040051;
         public static final int userField=0x7f040052;
         public static final int viewExamSchedule=0x7f040049;
-        public static final int wednesdayBox=0x7f040044;
+        public static final int wednesdayBox=0x7f040040;
         public static final int wrap_content=0x7f040003;
     }
     public static final class integer {
@@ -1241,7 +1241,7 @@ containing a value of this type.
         public static final int login_box=0x7f03001d;
         public static final int quick_start_guide=0x7f03001e;
         public static final int schedule_fragment_layout=0x7f03001f;
-        public static final int schedule_fragment_layout__later_update=0x7f030020;
+        public static final int schedule_fragment_layout___old_version=0x7f030020;
         public static final int semester_selection_box=0x7f030021;
         public static final int sherlock_spinner_dropdown_item=0x7f030022;
         public static final int sherlock_spinner_item=0x7f030023;
