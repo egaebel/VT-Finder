@@ -237,14 +237,14 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
         finalExamBundle.putParcelableArrayList("finalsList", model.getFinalsList());
         Bundle freeTimeBundle = new Bundle();
         freeTimeBundle.putParcelable("freeTime", model.getSchedule().findFreeTime());
-        
+
         //Create/add tabs and Fragments, and set text, and set first visible object.
         Tab scheduleTab = bar.newTab().setText("Schedule");
         fragAdapt.addTab(bar.newTab().setText("Final Exams"), ExamScheduleFragment.class, finalExamBundle);
         fragAdapt.addTab(scheduleTab, ScheduleFragment.class, scheduleBundle);
         fragAdapt.addTab(bar.newTab().setText("Free Time"), FreeTimeFragment.class, freeTimeBundle);
         bar.selectTab(scheduleTab);
-        
+                
         //If previously used, set to tab that was previously on.
         if (savedInstanceState != null) {
             

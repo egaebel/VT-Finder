@@ -4,6 +4,7 @@ import vt.finder.schedule.Schedule;
 import vt.finder.R;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,7 @@ import com.viewpagerindicator.TitlePageIndicator;
 public class CompScheduleFragment extends SherlockFragment {
 
     //~Constants----------------------------------------------
-
+    private final String TAG = "COMPARE_SCHEDULE_FRAGMENT";
 
     //~Data Fields--------------------------------------------
     /**
@@ -69,7 +70,9 @@ public class CompScheduleFragment extends SherlockFragment {
         //Get dayPage ViewPager from layout xml code
         LinearLayout layout = (LinearLayout) view.findViewById(R.id.linear_layout);
         dayPage = (ViewPager) layout.findViewById(R.id.schedule_day_pager);
+        Log.i(TAG, "yeah! right before I find my view!");
         dayIndicator = (TitlePageIndicator) layout.findViewById(R.id.titles);
+        Log.i(TAG, "yeah! right afterrrrrrrr I find my view!");
     }
     
     @Override
