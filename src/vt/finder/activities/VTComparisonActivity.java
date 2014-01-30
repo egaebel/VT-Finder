@@ -5,7 +5,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import vt.finder.gui.CompFreeTimeFragment;
 import vt.finder.gui.CompScheduleFragment;
 import vt.finder.gui.CourseComm;
-import vt.finder.gui.MyFragmentAdapter;
+import vt.finder.gui.VTFinderFragmentAdapter;
 import vt.finder.gui.NoSwipeViewPager;
 import vt.finder.main.ScheduleComparison;
 import vt.finder.schedule.Course;
@@ -31,7 +31,7 @@ public class VTComparisonActivity extends SherlockFragmentActivity implements Co
     /**
      * Fragment adapter used to handle fragments under tabs.
      */
-    private MyFragmentAdapter fragAdapt;
+    private VTFinderFragmentAdapter fragAdapt;
     /**
      * Instance of ScheduleComparison class, used to compare the received schedules.
      */
@@ -70,7 +70,7 @@ public class VTComparisonActivity extends SherlockFragmentActivity implements Co
         freeTimeBundle.putParcelable("freeTime", compare.getSharedFreeTime());
         
         //FragmentPagerAdapter etc. setup.
-        fragAdapt = new MyFragmentAdapter(this, pager);
+        fragAdapt = new VTFinderFragmentAdapter(this, pager);
         
         //Create/add tabs, and set text.
         fragAdapt.addTab(bar.newTab().setText("Common Classes"), CompScheduleFragment.class, scheduleBundle);

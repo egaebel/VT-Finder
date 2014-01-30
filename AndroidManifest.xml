@@ -32,8 +32,7 @@
     <application
         android:allowBackup="True"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/Theme.Sherlock" >
+        android:label="@string/app_name" >
         
         <uses-library android:name="android.test.runner" />
 		<uses-library android:name="com.google.android.maps" />

@@ -4,7 +4,7 @@ package vt.finder.activities;
 import vt.finder.gui.CourseComm;
 import vt.finder.gui.ExamScheduleFragment;
 import vt.finder.gui.FreeTimeFragment;
-import vt.finder.gui.MyFragmentAdapter;
+import vt.finder.gui.VTFinderFragmentAdapter;
 import vt.finder.gui.NoSwipeViewPager;
 import vt.finder.gui.ScheduleFragment;
 import vt.finder.io.PasswordIO;
@@ -78,18 +78,18 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
     private final String PREFS_NAME = "MyPrefsFile";
     private final String QUICK_START_TEXT = "Thank you for downloading VT Finder! \n Please take the time to rate VT Finder in Google Play." +
     		"\n\nGET STARTED:" +
-    		"\n•Change views from 'FINAL EXAMS' to 'SCHEDULE' to 'FREE TIME' by swiping left to right and vice-versa. " +
-    		"\n•Get your schedule from hokiespa by clicking \'Get Schedule\' at the bottom of the screen under either the \'SCHEDULE\' or \'FREE TIME\' views. " +
-    		"\n•Get your final exam schedule by clicking \'Get Exam Schedule\' at the bottom of the \'FINAL EXAMS\' view." +
+    		"\nï¿½Change views from 'FINAL EXAMS' to 'SCHEDULE' to 'FREE TIME' by swiping left to right and vice-versa. " +
+    		"\nï¿½Get your schedule from hokiespa by clicking \'Get Schedule\' at the bottom of the screen under either the \'SCHEDULE\' or \'FREE TIME\' views. " +
+    		"\nï¿½Get your final exam schedule by clicking \'Get Exam Schedule\' at the bottom of the \'FINAL EXAMS\' view." +
     		"\n\nLOGGING IN: " +
-    		"\n•To log into hokiespa you just need to select the term you want information for, and then enter your username and password. *THIS INFORMATION IS NOT MISUSED*" +
+    		"\nï¿½To log into hokiespa you just need to select the term you want information for, and then enter your username and password. *THIS INFORMATION IS NOT MISUSED*" +
     		"you can optionally save this information to your phone to save time later. When saved it is encrypted to keep people from snooping." +
     		"\n\nGETTING DIRECTIONS TO CLASS:" +
-    		"\n•After you\'ve loaded your schedule from hokiespa, just tap one of your classes and then push the \'Take me to class\' button to get instant Google Maps directions." +
-    		"•If you do not have GPS satellites enabled you will be prompted to enable them, and then you\'ll have a bit of a wait because Android takes forever to acquire GPS data." +
+    		"\nï¿½After you\'ve loaded your schedule from hokiespa, just tap one of your classes and then push the \'Take me to class\' button to get instant Google Maps directions." +
+    		"ï¿½If you do not have GPS satellites enabled you will be prompted to enable them, and then you\'ll have a bit of a wait because Android takes forever to acquire GPS data." +
     		"\n\nSWAPPING SCHEDULES WITH FRIENDS:" +
-    		"\n•VT Finder enables you to easily exchange schedules with your friends, and automatically compares your schedules to find common blocks of free time. " +
-    		"\n•Just click \'Compare with a Friend\' in the \'SCHEDULE\' view or the \'FREE TIME\' view and then select someone from your contacts list to swap schedules with. " +
+    		"\nï¿½VT Finder enables you to easily exchange schedules with your friends, and automatically compares your schedules to find common blocks of free time. " +
+    		"\nï¿½Just click \'Compare with a Friend\' in the \'SCHEDULE\' view or the \'FREE TIME\' view and then select someone from your contacts list to swap schedules with. " +
     		"They\'ll be informed of your request, and prompted to accept or decline your offer to exchange schedules. If they accept, both of your schedules will then be" +
     		" exchanged using text messages, compared for free time, and loaded into VT Finder.";
     
@@ -125,7 +125,7 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
      * Adapter used for creating tabs, handling tab clicking, page changing, and fragment
      * paging.
      */
-    private MyFragmentAdapter fragAdapt;
+    private VTFinderFragmentAdapter fragAdapt;
     /**
      * The ScheduleWaypoint object that holds, and is the intermediary for all of the data in this app.
      */
@@ -183,7 +183,7 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
         bar.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
         
         //FragmentPagerAdapter setup.
-        fragAdapt = new MyFragmentAdapter(this, pager);
+        fragAdapt = new VTFinderFragmentAdapter(this, pager);
         
         // setup password saving stuff
         File passwordFile = new File(getFilesDir(), "password_file.txt");
