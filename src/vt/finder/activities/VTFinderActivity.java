@@ -93,7 +93,7 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
     		"They\'ll be informed of your request, and prompted to accept or decline your offer to exchange schedules. If they accept, both of your schedules will then be" +
     		" exchanged using text messages, compared for free time, and loaded into VT Finder.";
     
-    //~Request Codes
+    //~Request Codesc
     /**
      * request code for switching to the Contact list
      */
@@ -191,6 +191,7 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
 
         // Get path for the file on external storage. If external
         // storage is not currently mounted this will fail.
+        
         File schedulesFile = new File(getFilesDir(), "test_file.xml");
         File examsFile = new File (getFilesDir(), "exams_file.xml");
         

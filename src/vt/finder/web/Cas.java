@@ -91,7 +91,7 @@ public class Cas {
                 OutputStream os = new FileOutputStream(cert);
                 os.write(certs[0].getEncoded());
                 os.close();
-Log.i("DEBUGGER", "GRABBED CERT!!!!!!!!!\n");
+
                 return true;
             }
         }
@@ -110,7 +110,7 @@ Log.i("DEBUGGER", "GRABBED CERT!!!!!!!!!\n");
         catch (CertificateEncodingException e) {
             e.printStackTrace();
         }
-Log.i("DEBUGGER", "FAILEDDDDDDDDDD TOOOOOOOO      GRAB CERT!!!!!!!!!\n");        
+        
         return false;
     }
     

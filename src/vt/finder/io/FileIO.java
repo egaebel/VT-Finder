@@ -386,9 +386,9 @@ public class FileIO {
         // gets array representation of the days of the week
         // values here will be changed, then values will be updated after
         // looping
-        Day[] theDay;
+        Day[] theDaysArray;
 
-        theDay = loadedSchedule.daysToArray();
+        theDaysArray = loadedSchedule.daysToArray();
 
         // values used to create a new course object
         // NodeList used for Name, teacher, room, time, building element lists
@@ -412,8 +412,11 @@ public class FileIO {
         // gets courses from that day
         // then loops through the arraylist of courses retrieving courseName,
         // teacherName etc
-        for (int k = 0; k < theDay.length; k++) {
+        for (int k = 0; k < theDaysArray.length; k++) {
 
+            
+Log.i(TAG, "k == " + k);
+Log.i(TAG, "day == " + days[k]);
             // Day setting
             dayList = scheduleEl.getElementsByTagName(days[k]);
             dayEl = (Element) dayList.item(0);
@@ -489,7 +492,7 @@ public class FileIO {
                         room = theEl.getChildNodes().item(0).getNodeValue()
                                 .trim().toString();
                         
-                        theDay[k].addCourse(name, subjectCode, courseNumber, teacher, beginTime, endTime,
+                        theDaysArray[k].addCourse(name, subjectCode, courseNumber, teacher, beginTime, endTime,
                                 building, room);
                     }
                     else {
@@ -508,7 +511,7 @@ public class FileIO {
         }// end loop through days
 
         // update the schedule with theDay array that contains changes
-        loadedSchedule.arrayToDays(theDay);
+        loadedSchedule.arrayToDays(theDaysArray);
 
         // if there is more than one schedule in the passed doc....
         if (numScheds > 1) {
