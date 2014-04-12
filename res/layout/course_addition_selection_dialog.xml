@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+       <RadioGroup
+           android:id="@+id/radioGroup1"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent" >
+
+           <RadioButton
+               android:id="@+id/timetableRadioButton"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="83dp"
+               android:text="Pull Course from the Timetable" />
+
+        <RadioButton
+            android:id="@+id/customCourseRadioButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add a Custom Course/Event" />
+       </RadioGroup>
+
+</LinearLayout>
