@@ -707,7 +707,7 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
 
         if (!examScheduleScraping) {           
     
-            // --ALERT BOX FOR
+            // --ALERT BOX FORjbnjbbnjbkkkkkjbj
             // LOGIN--------------------------------------------------------------------
             LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View layout = inflater.inflate(R.layout.login_box, null);

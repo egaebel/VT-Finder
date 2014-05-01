@@ -148,12 +148,11 @@ public class ScheduleScraper {
                             .method(Method.GET)
                             .execute();
         
-                    cookies.put("SESSID", hokieResp.cookies().get("SESSID"));
+                    cookies.putAll(hokieResp.cookies());
 
                     // go to the detailed schedule page
                     Document hokieDoc = Jsoup.connect(HOKIESPA + semesterCode + PRINT_FRIENDLY)
-                            .cookie("IDMSESSID", cookies.get("IDMSESSID"))
-                            .cookie("SESSID", cookies.get("SESSID"))
+                            .cookies(cookies)
                             .userAgent(AGENTS)
                             .referrer(HOKIESTOP + semesterCode + ENDOFURL)
                             .post();
