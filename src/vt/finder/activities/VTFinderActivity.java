@@ -80,7 +80,9 @@ import android.widget.Toast;
  * @author Ethan Gaebel (egaebel)
  *
  */
-public class VTFinderActivity extends SherlockFragmentActivity implements CourseComm, ReceiveCreatedCourse {
+public class VTFinderActivity 
+	extends SherlockFragmentActivity 
+	implements CourseComm, ReceiveCreatedCourse {
 
     //~Constants---------------------------------------------------------//
     private static final String TAG = "VT ORIENTATION ACTIVITY";
@@ -133,12 +135,12 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
     /**
      * View pager object used for holding and switching between pages of fragments.
      */
-    private NoSwipeViewPager pager;
+    //private NoSwipeViewPager pager;
     /**
      * Adapter used for creating tabs, handling tab clicking, page changing, and fragment
      * paging.
      */
-    private VTFinderFragmentAdapter fragAdapt;
+    //private VTFinderFragmentAdapter fragAdapt;
     /**
      * The ScheduleWaypoint object that holds, and is the intermediary for all of the data in this app.
      */
@@ -168,7 +170,7 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
     /**
      * The ActionBar UI element.
      */
-    private ActionBar actionBar;
+    //private ActionBar actionBar;
     /**
      * The BaseFragment that is the root element of the entire UI.
      */
@@ -519,7 +521,7 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
 				//Base level
 				if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
 					
-					actionBar.show();
+					//actionBar.show();
 				}
 				//If top is CreateCourseFragment
 				else if (getSupportFragmentManager()
@@ -527,7 +529,7 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
 						.getName()
 						.equals(CREATE_COURSE_FRAGMENT_NAME)) {
 					
-					actionBar.hide();
+					//actionBar.hide();
 				}
 			}
 		});

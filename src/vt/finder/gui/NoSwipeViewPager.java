@@ -6,8 +6,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 
-/**
- * Implementation of ViewPager that is identical to the original, except that
+/** 
+ * Implementation of ViewPager that is identical to the original, except that 
  * the swiping capability is disabled.
  * 
  * @author Ethan Gaebel (egaebel)
@@ -15,6 +15,9 @@ import android.view.MotionEvent;
  */
 public class NoSwipeViewPager extends ViewPager {
 
+	//~Constants------------------------------------------------
+	private static final String TAG = "NO SWIPE VIEW PAGER";
+	
     //~Constructors--------------------------------------------
     public NoSwipeViewPager(Context context) {
 
@@ -34,4 +37,14 @@ public class NoSwipeViewPager extends ViewPager {
         
         return false;
     }
+    
+    /*
+    @Override
+    public void setCurrentItem(int index) {
+    	super.setCurrentItem(index);
+    	Log.i(TAG, "setting current item at index: " + index);
+    	Log.i(TAG, "Current item at the index is: ");
+    	Log.i(TAG, "##################################################");
+    }
+    */
 }

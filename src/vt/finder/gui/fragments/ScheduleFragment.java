@@ -41,7 +41,7 @@ public class ScheduleFragment extends SherlockFragment {
      */
     private TitlePageIndicator dayIndicator;
     /**
-     * The schedule holding Courses passed to this fragment.
+     * The schedule holding Courses passed to this fragment.  
      */
     private Schedule schedule;
 

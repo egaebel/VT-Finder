@@ -1,6 +1,7 @@
 package vt.finder.gui.fragments;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import vt.finder.R;
 import vt.finder.gui.NoSwipeViewPager;
@@ -13,11 +14,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.ActionBar.Tab;
 
+/**
+ * 
+ * @author egaebel
+ *
+ */
 public class BaseFragment extends SherlockFragment {
 
 	//~Constants----------------------------------------------------------------------------------------
@@ -62,17 +69,7 @@ public class BaseFragment extends SherlockFragment {
 		
 		super.onViewCreated(view, savedInstanceState);
 		
-		Log.i(TAG, "onViewCreated");
-		
-		//Setup Fragment Adapter and Pager--------
-        //NO SWIPE ViewPagers setup.
-        pager = new NoSwipeViewPager(this.getSherlockActivity());
-        pager.setId(R.id.pager);
-        FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.pager);
-        frameLayout.addView(pager);
-
-        //FragmentPagerAdapter setup.
-        fragAdapt = new VTFinderFragmentAdapter(this.getSherlockActivity(), pager);
+		Log.i(TAG, "onViewCreated");        
 	}
 	
 	@Override
@@ -81,22 +78,32 @@ public class BaseFragment extends SherlockFragment {
 		super.onActivityCreated(savedInstanceState);
 		
 		Log.i(TAG, "onActivityCreated");
+		//Setup Fragment Adapter and Pager-------- 
+        //NO SWIPE ViewPagers setup.
+        pager = new NoSwipeViewPager(this.getSherlockActivity());
+        pager.setId(R.id.pager);
+        this.getSherlockActivity().setContentView(pager);
+		
 		//~Setup ActionBar Tabs----------------------------------------------
 		actionBar = this.getSherlockActivity().getSupportActionBar();
 		actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
+
+        //FragmentPagerAdapter setup.
+        fragAdapt = new VTFinderFragmentAdapter(this.getSherlockActivity(), pager);
 		
 		Bundle arguments = this.getArguments();
 		
+		Schedule schedule = arguments.getParcelable("schedule");
+		ArrayList<Course> finalsList = arguments.getParcelableArrayList("finalsList");
+		
         //Create bundles to pass to the TabInfos.
         Bundle scheduleBundle = new Bundle();
-        scheduleBundle.putParcelable("schedule", 
-        		arguments.getParcelable("schedule"));
+        scheduleBundle.putParcelable("schedule", schedule);
         Bundle finalExamBundle = new Bundle();
-        finalExamBundle.putParcelableArrayList("finalsList", 
-        		arguments.getParcelableArrayList("finalsList"));
+        finalExamBundle.putParcelableArrayList("finalsList", finalsList);
         Bundle freeTimeBundle = new Bundle();
         freeTimeBundle.putParcelable("freeTime", 
         		arguments.getParcelable("freeTime"));
@@ -108,7 +115,6 @@ public class BaseFragment extends SherlockFragment {
 		fragAdapt.addTab(finalsTab, ExamScheduleFragment.class, finalExamBundle);
 		fragAdapt.addTab(scheduleTab, ScheduleFragment.class, scheduleBundle);
 		fragAdapt.addTab(freeTimeTab, FreeTimeFragment.class, freeTimeBundle);
-		
 		actionBar.selectTab(scheduleTab);
 		
 		//If previously used, set to tab that was previously on.
@@ -122,6 +128,9 @@ public class BaseFragment extends SherlockFragment {
             
         	actionBar.setSelectedNavigationItem(savedInstanceState.getInt("tab", 1));
         }
+		
+		//setupExamScheduleListView(finalsList);
+		//setupScheduleListViews(schedule);
 	}
 	
     //~Methods------------------------------------------------------------------------------------------------
@@ -131,7 +140,7 @@ public class BaseFragment extends SherlockFragment {
     public void setupExamScheduleListView(ArrayList<Course> finalsList) {
 
         if (finalsList != null) {
-            
+            Log.i(TAG, "I have the fragments: " + getSherlockActivity().getSupportFragmentManager().getFragments());
             ExamScheduleFragment sched = (ExamScheduleFragment) getSherlockActivity()
             		.getSupportFragmentManager()
             		.findFragmentByTag(fragAdapt.getFragmentTag(0));

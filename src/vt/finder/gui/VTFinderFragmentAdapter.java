@@ -1,12 +1,17 @@
 package vt.finder.gui;
 
 import java.util.ArrayList;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
+import android.view.ViewGroup;
+
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.app.ActionBar.Tab;
@@ -18,9 +23,15 @@ import com.actionbarsherlock.app.ActionBar.Tab;
  * @author Ethan Gaebel (egaebel)
  *
  */
-public final class VTFinderFragmentAdapter extends FragmentPagerAdapter 
-    implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
+public final class VTFinderFragmentAdapter 
+	extends FragmentPagerAdapter 
+    implements ActionBar.TabListener, 
+    	ViewPager.OnPageChangeListener {
 
+	//~Constants-----------------------------------------------------------------------------
+	private static final String TAG = "VT Finder Fragment Adapter";
+	
+	//~Data Fields-----------------------------------------------------------------------------
     /**
      * ArrayList of TabInfo used to retrieve the appropriate Fragment when a tab is clicked.
      */
@@ -81,6 +92,18 @@ public final class VTFinderFragmentAdapter extends FragmentPagerAdapter
         this.notifyDataSetChanged();
     }
     
+    /*
+    @Override
+    public Object instantiateItem(ViewGroup container, int position) {
+    	
+    	TabInfo info = theTabs.get(position);
+    	
+    	Fragment fragment = (Fragment) Fragment.instantiate(context, info.classType.getName(), info.getArgs());
+    	
+    	return fragment;
+    }
+    */
+    
     /**
      * Gets the fragment at the passed in index.
      * 
@@ -91,8 +114,36 @@ public final class VTFinderFragmentAdapter extends FragmentPagerAdapter
     public Fragment getItem(int index) {
 
         TabInfo info = theTabs.get(index);
-        
+
         return Fragment.instantiate(context, info.classType.getName(), info.getArgs());
+    }
+
+    /**
+     * Method called when the passed in tab is selected. Switches
+     * to the fragment identified by the tab.
+     * 
+     * @param tab the tab that was clicked 
+     * @param ft the type of transaction that is to occur???   
+     */
+    @Override
+    public void onTabSelected(Tab tab, FragmentTransaction ft) {
+
+        Object tag = tab.getTag();
+        for (int i = 0; i < theTabs.size(); i++) {
+            
+        	if (theTabs.get(i).equals(tag)) {
+        		Log.i(TAG, theTabs.get(i).toString());
+        		Log.i(TAG, "currentItem index ==  " + i);
+        		this.setPrimaryItem(viewPager, i, this.getItem(i));
+                viewPager.setCurrentItem(i);
+                Log.i(TAG, "item == " + viewPager.getCurrentItem());
+                break;
+            }
+
+        }
+        TabInfo info = (TabInfo) tab.getTag();
+        Log.i(TAG, "" + Fragment.instantiate(context, info.classType.getName(), info.getArgs()).toString());
+        Log.i(TAG, "*********************************************");
     }
     
     /**
@@ -116,24 +167,6 @@ public final class VTFinderFragmentAdapter extends FragmentPagerAdapter
     public int getCount() {
 
         return theTabs.size();
-    }
-
-    /**
-     * Method called when the passed in tab is selected. Switches
-     * to the fragment identified by the tab.
-     * 
-     * @param tab the tab that was clicked
-     * @param ft the type of transaction that is to occur???  
-     */
-    @Override
-    public void onTabSelected(Tab tab, FragmentTransaction ft) {
-
-        Object tag = tab.getTag();
-        for (int i = 0; i < theTabs.size(); i++) {
-            if (theTabs.get(i) == tag) {
-                viewPager.setCurrentItem(i);
-            }
-        }
     }
 
     /**
