@@ -133,15 +133,6 @@ public class VTFinderActivity
     
     //~Data Fields-------------------------------------------------------//
     /**
-     * View pager object used for holding and switching between pages of fragments.
-     */
-    //private NoSwipeViewPager pager;
-    /**
-     * Adapter used for creating tabs, handling tab clicking, page changing, and fragment
-     * paging.
-     */
-    //private VTFinderFragmentAdapter fragAdapt;
-    /**
      * The ScheduleWaypoint object that holds, and is the intermediary for all of the data in this app.
      */
     private ScheduleWaypoint model;
@@ -168,10 +159,6 @@ public class VTFinderActivity
      */
     private Course selection;
     /**
-     * The ActionBar UI element.
-     */
-    //private ActionBar actionBar;
-    /**
      * The BaseFragment that is the root element of the entire UI.
      */
     private BaseFragment baseFragment;
@@ -182,22 +169,6 @@ public class VTFinderActivity
         
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vtfinder);
-        
-        /*
-        //NO SWIPE ViewPagers setup.
-        pager = new NoSwipeViewPager(this.getBaseContext());
-        pager.setId(R.id.pager);
-        setContentView(pager);
-        //FragmentPagerAdapter setup.
-        fragAdapt = new VTFinderFragmentAdapter(this, pager);
-        
-        //ActionBar setup
-        actionBar = getSupportActionBar();
-        actionBar.setDisplayShowHomeEnabled(false);
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
-        */
         
         // setup password saving stuff
         File passwordFile = new File(getFilesDir(), "password_file.txt");
@@ -252,37 +223,16 @@ public class VTFinderActivity
         dataBundle.putParcelable("freeTime", model.getSchedule().findFreeTime());
         baseFragment.setArguments(dataBundle);
         
+        
         //Add Fragment
         FragmentTransaction fragTrans = this.getSupportFragmentManager().beginTransaction();
         fragTrans.replace(R.id.base_layout, baseFragment);
         fragTrans.commit();
         getSupportFragmentManager().executePendingTransactions();
         
-        /*
-        //Create bundles to pass to the TabInfos.
-        Bundle scheduleBundle = new Bundle();
-        scheduleBundle.putParcelable("schedule", model.getSchedule());
-        Bundle finalExamBundle = new Bundle();
-        finalExamBundle.putParcelableArrayList("finalsList", model.getFinalsList());
-        Bundle freeTimeBundle = new Bundle();
-        freeTimeBundle.putParcelable("freeTime", model.getSchedule().findFreeTime());
-
-        //Create/add tabs and Fragments, and set text, and set first visible object.
-        Tab scheduleTab = actionBar.newTab().setText("Schedule");
-        fragAdapt.addTab(actionBar.newTab().setText("Final Exams"), ExamScheduleFragment.class, finalExamBundle);
-        fragAdapt.addTab(scheduleTab, ScheduleFragment.class, scheduleBundle);
-        fragAdapt.addTab(actionBar.newTab().setText("Free Time"), FreeTimeFragment.class, freeTimeBundle);
-        actionBar.selectTab(scheduleTab);
-        */
-                
-        /*
-        //If previously used, set to tab that was previously on.
-        if (savedInstanceState != null) {
-            
-        	actionBar.setSelectedNavigationItem(savedInstanceState.getInt("tab", 1));
-        }
-        */
-
+        //baseFragment.setupScheduleListViews(model.getSchedule());
+        //baseFragment.setupExamScheduleListView(model.getFinalsList());
+        
         //start service
         Intent service = new Intent(this.getBaseContext(),
                 VTFinderService.class);
@@ -308,6 +258,8 @@ public class VTFinderActivity
         //initialize async task switches to false
         scheduleScraping = false;
         examScheduleScraping = false;
+        
+        Log.i(TAG, "endOfOnCreate: " + getSupportFragmentManager().getFragments());
     }
     
     /**
@@ -337,11 +289,21 @@ public class VTFinderActivity
     }
     
     /**
+     * Defines activity behavior on start.
+     */
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i(TAG, "onStart: " + getSupportFragmentManager().getFragments());
+    }
+    
+    /**
      * Defines activity behavior on resume.
      */
     @Override
     protected void onResume() {
     	super.onResume();
+    	Log.i(TAG, "onResume: " + getSupportFragmentManager().getFragments());
     }
     
     /**
@@ -354,7 +316,7 @@ public class VTFinderActivity
     }
     
     /**
-     * Defines activity behavior on exit
+     * Defines activity behavior on exit.  
      */
     @Override
     protected void onDestroy() {

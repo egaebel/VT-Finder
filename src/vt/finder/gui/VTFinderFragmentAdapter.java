@@ -50,7 +50,7 @@ public final class VTFinderFragmentAdapter
      * The context of the enclosing activity.
      */
     private final Context context;
-    
+    private final SherlockFragmentActivity activity;
     //~Constructors--------------------------------------------------//
     /**
      * Only constructor. Takes in a SherlockFragment activity (for compatibility)
@@ -70,6 +70,8 @@ public final class VTFinderFragmentAdapter
         viewPager = pager;
         viewPager.setAdapter(this);
         viewPager.setOnPageChangeListener(this);
+        
+        this.activity = activity;
     }
 
     //~Methods--------------------------------------------------------//
@@ -90,19 +92,8 @@ public final class VTFinderFragmentAdapter
         theTabs.add(info);
         actionBar.addTab(tab);
         this.notifyDataSetChanged();
+        Log.i(TAG, "FRAGMENT ADAPTER onStart: " + activity.getSupportFragmentManager().getFragments());
     }
-    
-    /*
-    @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-    	
-    	TabInfo info = theTabs.get(position);
-    	
-    	Fragment fragment = (Fragment) Fragment.instantiate(context, info.classType.getName(), info.getArgs());
-    	
-    	return fragment;
-    }
-    */
     
     /**
      * Gets the fragment at the passed in index.
@@ -132,18 +123,13 @@ public final class VTFinderFragmentAdapter
         for (int i = 0; i < theTabs.size(); i++) {
             
         	if (theTabs.get(i).equals(tag)) {
-        		Log.i(TAG, theTabs.get(i).toString());
-        		Log.i(TAG, "currentItem index ==  " + i);
+
         		this.setPrimaryItem(viewPager, i, this.getItem(i));
                 viewPager.setCurrentItem(i);
-                Log.i(TAG, "item == " + viewPager.getCurrentItem());
                 break;
             }
 
         }
-        TabInfo info = (TabInfo) tab.getTag();
-        Log.i(TAG, "" + Fragment.instantiate(context, info.classType.getName(), info.getArgs()).toString());
-        Log.i(TAG, "*********************************************");
     }
     
     /**
@@ -169,11 +155,24 @@ public final class VTFinderFragmentAdapter
         return theTabs.size();
     }
 
+    @Override
+    public void startUpdate(ViewGroup container) {
+        super.startUpdate(container);
+        Log.i(TAG, "startUpdate ViewGroup: " + container.getId());
+        Log.i(TAG, "FRAGMENT ADAPTER startUpdate: " + activity.getSupportFragmentManager().getFragments());
+    }
+    
+    @Override
+    public void finishUpdate(ViewGroup container) {
+        super.finishUpdate(container);
+        Log.i(TAG, "FRAGMENT ADAPTER finishUpdate: " + activity.getSupportFragmentManager().getFragments());        
+    }
+    
     /**
-     * Takes in an index and sets the tab identified by the index
+     * Takes in an index and sets the tab identified by the index  
      * to be the active tab.
      * 
-     * @param index the index of the ActionBar.Tab to set as active.
+     * @param index the index of the ActionBar.Tab to set as active. 
      */
     @Override
     public void onPageSelected(int index) {

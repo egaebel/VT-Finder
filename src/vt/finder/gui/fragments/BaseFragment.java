@@ -2,12 +2,12 @@ package vt.finder.gui.fragments;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import vt.finder.R;
 import vt.finder.gui.NoSwipeViewPager;
 import vt.finder.gui.VTFinderFragmentAdapter;
 import vt.finder.schedule.Course;
 import vt.finder.schedule.Schedule;
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,10 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 /**
  * 
@@ -46,10 +47,20 @@ public class BaseFragment extends SherlockFragment {
     private ActionBar actionBar;
 	
     //~Lifecycle Methods--------------------------------------------------------------------------------------
+    /**
+     * Called when fragment is associated with an activity.  
+     */
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        Log.i(TAG, "onAttach: " + ((SherlockFragmentActivity)activity).getSupportFragmentManager().getFragments());
+    }
+    
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.i(TAG, "onCreate called");
+		Log.i(TAG, "onCreate: " + getSherlockActivity().getSupportFragmentManager().getFragments());
 	}
 	
 	@Override
@@ -60,7 +71,7 @@ public class BaseFragment extends SherlockFragment {
 		Log.i(TAG, "onCreateView");
 		
         View view = inflater.inflate(R.layout.base_fragment_layout, null);
-        
+        Log.i(TAG, "onCreateView: " + getSherlockActivity().getSupportFragmentManager().getFragments());
         return view;
 	}
 	
@@ -69,7 +80,8 @@ public class BaseFragment extends SherlockFragment {
 		
 		super.onViewCreated(view, savedInstanceState);
 		
-		Log.i(TAG, "onViewCreated");        
+		Log.i(TAG, "onViewCreated");
+		Log.i(TAG, "onViewCreated: " + getSherlockActivity().getSupportFragmentManager().getFragments());
 	}
 	
 	@Override
@@ -131,6 +143,25 @@ public class BaseFragment extends SherlockFragment {
 		
 		//setupExamScheduleListView(finalsList);
 		//setupScheduleListViews(schedule);
+        Log.i(TAG, "endOfOnActivityStarted: " + getSherlockActivity().getSupportFragmentManager().getFragments());
+	}
+	
+	@Override
+	public void onViewStateRestored(Bundle bundle) {
+	    super.onViewStateRestored(bundle);
+	    Log.i(TAG, "FRAGMENT onvIEWsTATErESTORED: " + this.getSherlockActivity().getSupportFragmentManager().getFragments());
+	}
+	
+	@Override
+    public void onStart() {
+	    super.onStart();
+	    Log.i(TAG, "FRAGMENT onStart: " + this.getSherlockActivity().getSupportFragmentManager().getFragments());
+	}
+	
+	@Override
+	public void onResume() {
+	    super.onResume();
+	    Log.i(TAG, "FRAGMENT onResume: " + this.getSherlockActivity().getSupportFragmentManager().getFragments());
 	}
 	
     //~Methods------------------------------------------------------------------------------------------------
@@ -140,7 +171,7 @@ public class BaseFragment extends SherlockFragment {
     public void setupExamScheduleListView(ArrayList<Course> finalsList) {
 
         if (finalsList != null) {
-            Log.i(TAG, "I have the fragments: " + getSherlockActivity().getSupportFragmentManager().getFragments());
+
             ExamScheduleFragment sched = (ExamScheduleFragment) getSherlockActivity()
             		.getSupportFragmentManager()
             		.findFragmentByTag(fragAdapt.getFragmentTag(0));
@@ -154,7 +185,7 @@ public class BaseFragment extends SherlockFragment {
     public void setupScheduleListViews(Schedule schedule) {
 
         if (schedule != null) {
-
+Log.i(TAG, "setupScheduleListViews: " + getSherlockActivity().getSupportFragmentManager().getFragments());
         	ScheduleFragment sched = (ScheduleFragment) getSherlockActivity()
         			.getSupportFragmentManager()
         			.findFragmentByTag(fragAdapt.getFragmentTag(1));
