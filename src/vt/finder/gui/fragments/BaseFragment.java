@@ -53,14 +53,14 @@ public class BaseFragment extends SherlockFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        Log.i(TAG, "onAttach: " + ((SherlockFragmentActivity)activity).getSupportFragmentManager().getFragments());
+        //Log.i(TAG, "onAttach: " + ((SherlockFragmentActivity)activity).getSupportFragmentManager().getFragments());
     }
     
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.i(TAG, "onCreate called");
-		Log.i(TAG, "onCreate: " + getSherlockActivity().getSupportFragmentManager().getFragments());
+		//Log.i(TAG, "onCreate called");
+		//Log.i(TAG, "onCreate: " + getSherlockActivity().getSupportFragmentManager().getFragments());
 	}
 	
 	@Override
@@ -68,10 +68,10 @@ public class BaseFragment extends SherlockFragment {
 		
 		super.onCreateView(inflater, container, savedInstanceState);
 		
-		Log.i(TAG, "onCreateView");
+		//Log.i(TAG, "onCreateView");
 		
         View view = inflater.inflate(R.layout.base_fragment_layout, null);
-        Log.i(TAG, "onCreateView: " + getSherlockActivity().getSupportFragmentManager().getFragments());
+        //Log.i(TAG, "onCreateView: " + getSherlockActivity().getSupportFragmentManager().getFragments());
         return view;
 	}
 	
@@ -80,8 +80,8 @@ public class BaseFragment extends SherlockFragment {
 		
 		super.onViewCreated(view, savedInstanceState);
 		
-		Log.i(TAG, "onViewCreated");
-		Log.i(TAG, "onViewCreated: " + getSherlockActivity().getSupportFragmentManager().getFragments());
+		//Log.i(TAG, "onViewCreated");
+		//Log.i(TAG, "onViewCreated: " + getSherlockActivity().getSupportFragmentManager().getFragments());
 	}
 	
 	@Override
@@ -89,7 +89,7 @@ public class BaseFragment extends SherlockFragment {
 		
 		super.onActivityCreated(savedInstanceState);
 		
-		Log.i(TAG, "onActivityCreated");
+		//Log.i(TAG, "onActivityCreated");
 		//Setup Fragment Adapter and Pager-------- 
         //NO SWIPE ViewPagers setup.
         pager = new NoSwipeViewPager(this.getSherlockActivity());
@@ -116,17 +116,19 @@ public class BaseFragment extends SherlockFragment {
         scheduleBundle.putParcelable("schedule", schedule);
         Bundle finalExamBundle = new Bundle();
         finalExamBundle.putParcelableArrayList("finalsList", finalsList);
+        /*
         Bundle freeTimeBundle = new Bundle();
         freeTimeBundle.putParcelable("freeTime", 
         		arguments.getParcelable("freeTime"));
+        */
         
         //Create/add tabs and Fragments, and set text, and set first visible object.
 		Tab scheduleTab = actionBar.newTab().setText("Schedule");
 		Tab finalsTab = actionBar.newTab().setText("Final Exams");
-		Tab freeTimeTab = actionBar.newTab().setText("Free Time");
+		//Tab freeTimeTab = actionBar.newTab().setText("Free Time");
 		fragAdapt.addTab(finalsTab, ExamScheduleFragment.class, finalExamBundle);
 		fragAdapt.addTab(scheduleTab, ScheduleFragment.class, scheduleBundle);
-		fragAdapt.addTab(freeTimeTab, FreeTimeFragment.class, freeTimeBundle);
+		//fragAdapt.addTab(freeTimeTab, FreeTimeFragment.class, freeTimeBundle);
 		actionBar.selectTab(scheduleTab);
 		
 		//If previously used, set to tab that was previously on.
@@ -143,25 +145,25 @@ public class BaseFragment extends SherlockFragment {
 		
 		//setupExamScheduleListView(finalsList);
 		//setupScheduleListViews(schedule);
-        Log.i(TAG, "endOfOnActivityStarted: " + getSherlockActivity().getSupportFragmentManager().getFragments());
+        //Log.i(TAG, "endOfOnActivityStarted: " + getSherlockActivity().getSupportFragmentManager().getFragments());
 	}
 	
 	@Override
 	public void onViewStateRestored(Bundle bundle) {
 	    super.onViewStateRestored(bundle);
-	    Log.i(TAG, "FRAGMENT onvIEWsTATErESTORED: " + this.getSherlockActivity().getSupportFragmentManager().getFragments());
+	    //Log.i(TAG, "FRAGMENT onvIEWsTATErESTORED: " + this.getSherlockActivity().getSupportFragmentManager().getFragments());
 	}
 	
 	@Override
     public void onStart() {
 	    super.onStart();
-	    Log.i(TAG, "FRAGMENT onStart: " + this.getSherlockActivity().getSupportFragmentManager().getFragments());
+	    //Log.i(TAG, "FRAGMENT onStart: " + this.getSherlockActivity().getSupportFragmentManager().getFragments());
 	}
 	
 	@Override
 	public void onResume() {
 	    super.onResume();
-	    Log.i(TAG, "FRAGMENT onResume: " + this.getSherlockActivity().getSupportFragmentManager().getFragments());
+	    //Log.i(TAG, "FRAGMENT onResume: " + this.getSherlockActivity().getSupportFragmentManager().getFragments());
 	}
 	
     //~Methods------------------------------------------------------------------------------------------------
@@ -185,16 +187,18 @@ public class BaseFragment extends SherlockFragment {
     public void setupScheduleListViews(Schedule schedule) {
 
         if (schedule != null) {
-Log.i(TAG, "setupScheduleListViews: " + getSherlockActivity().getSupportFragmentManager().getFragments());
+
         	ScheduleFragment sched = (ScheduleFragment) getSherlockActivity()
         			.getSupportFragmentManager()
         			.findFragmentByTag(fragAdapt.getFragmentTag(1));
             sched.updateSchedule(schedule);
 
+            /*
             FreeTimeFragment freeTime = (FreeTimeFragment) getSherlockActivity()
             		.getSupportFragmentManager()
             		.findFragmentByTag(fragAdapt.getFragmentTag(2));
             freeTime.updateSchedule(schedule.findFreeTime());
+            */
         }
     }
 }

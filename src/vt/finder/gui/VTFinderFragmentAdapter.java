@@ -92,7 +92,7 @@ public final class VTFinderFragmentAdapter
         theTabs.add(info);
         actionBar.addTab(tab);
         this.notifyDataSetChanged();
-        Log.i(TAG, "FRAGMENT ADAPTER onStart: " + activity.getSupportFragmentManager().getFragments());
+        //Log.i(TAG, "FRAGMENT ADAPTER onStart: " + activity.getSupportFragmentManager().getFragments());
     }
     
     /**
@@ -158,14 +158,14 @@ public final class VTFinderFragmentAdapter
     @Override
     public void startUpdate(ViewGroup container) {
         super.startUpdate(container);
-        Log.i(TAG, "startUpdate ViewGroup: " + container.getId());
-        Log.i(TAG, "FRAGMENT ADAPTER startUpdate: " + activity.getSupportFragmentManager().getFragments());
+        //Log.i(TAG, "startUpdate ViewGroup: " + container.getId());
+        //Log.i(TAG, "FRAGMENT ADAPTER startUpdate: " + activity.getSupportFragmentManager().getFragments());
     }
     
     @Override
     public void finishUpdate(ViewGroup container) {
         super.finishUpdate(container);
-        Log.i(TAG, "FRAGMENT ADAPTER finishUpdate: " + activity.getSupportFragmentManager().getFragments());        
+        //Log.i(TAG, "FRAGMENT ADAPTER finishUpdate: " + activity.getSupportFragmentManager().getFragments());        
     }
     
     /**

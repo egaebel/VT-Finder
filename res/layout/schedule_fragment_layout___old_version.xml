@@ -22,7 +22,7 @@
 	<RelativeLayout
 	    android:id="@+id/relativeLayout1"
 	    android:layout_width="match_parent"
-	    android:layout_height="100dp" >
+	    android:layout_height="wrap_content" >
 
 	    <Button
 	        android:id="@+id/getScheduleButton"
@@ -39,15 +39,6 @@
 	        android:layout_alignParentTop="true"
 	        android:onClick="takeMeToClassClicked"
 	        android:text="@string/take_me_to_class" />
-
-	    <Button
-	        android:id="@+id/compareWithFriends"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_below="@+id/getScheduleButton"
-	        android:layout_centerHorizontal="true"
-	        android:onClick="compareWithFriendsClicked"
-	        android:text="@string/compare_with_a_friend" />
 	    
 	</RelativeLayout>
 

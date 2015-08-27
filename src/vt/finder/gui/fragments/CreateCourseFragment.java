@@ -6,6 +6,7 @@ import vt.finder.R;
 import vt.finder.schedule.UserMadeCourse;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,17 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 public class CreateCourseFragment extends SherlockFragment {
 
+	//Interface used to send data through to the Activity
+	public interface ReceiveCreatedCourse {
+		
+		//Takes a UserMadeCourse and a String indicating the days the course occurs on and does something with them
+		public void receiveCreatedCourse(UserMadeCourse course, String daysString);
+	}
+
+	//~Constants---------------------------------------------------------------------
+	private static final String TAG = "CREATE COURSE FRAGMENT";
 	
+	//~Fields------------------------------------------------------------------------
 	private EditText courseName;
 	private EditText courseCode;
 	private EditText teacherName;
@@ -40,10 +51,61 @@ public class CreateCourseFragment extends SherlockFragment {
 	private CheckBox saturdayBox;
 	private CheckBox sundayBox;
 
+	//~Lifecycle Methods------------------------------------------------------------
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	}
+	
+	@Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		Log.i(TAG, "onCreateView called....");
+		super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.course_addition_dialog, null);
+        view.setBackgroundColor(this.getResources().getColor(R.color.maroon));
+        
+        //SETUP GUI ELEMENTS------------------------------------------
+        courseName = (EditText) view.findViewById(R.id.courseName);
+        courseCode = (EditText) view.findViewById(R.id.courseCode);
+        teacherName = (EditText) view.findViewById(R.id.teacherName);
+
+        beginTime = (EditText) view.findViewById(R.id.startTime);
+        endTime = (EditText) view.findViewById(R.id.endTime);
+        roomNumber = (EditText) view.findViewById(R.id.roomNumber);
+        
+        buildingSpinner = (Spinner) view.findViewById(R.id.building);
+        spinnerAdapter = ArrayAdapter.createFromResource(this.getSherlockActivity(), 
+        					R.array.buildings_array, 
+        					android.R.layout.simple_spinner_dropdown_item);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        buildingSpinner.setAdapter(spinnerAdapter);
+        buildingString = "";
+        buildingSpinner.setOnItemSelectedListener(new OnItemSelectedListener(){
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                    int pos, long id) {
+
+                buildingString = parent.getItemAtPosition(pos).toString();
+                
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+
+                buildingString = "";
+            }});
+        
+        mondayBox = (CheckBox) view.findViewById(R.id.mondayBox);
+        tuesdayBox = (CheckBox) view.findViewById(R.id.tuesdayBox);
+        wednesdayBox = (CheckBox) view.findViewById(R.id.wednesdayBox);
+        thursdayBox = (CheckBox) view.findViewById(R.id.thursdayBox);
+        fridayBox = (CheckBox) view.findViewById(R.id.fridayBox);
+        saturdayBox = (CheckBox) view.findViewById(R.id.saturdayBox);
+        sundayBox = (CheckBox) view.findViewById(R.id.sundayBox);
+        
+        return view;
+    }
 	
 	public void createNewCourse(View view) {
 		
@@ -132,62 +194,5 @@ public class CreateCourseFragment extends SherlockFragment {
                                             buildingString.toString(), 
                                             roomNumber.getText().toString());
         }
-	}
-	
-	@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		
-		super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.course_addition_dialog, null);
-        view.setBackgroundColor(this.getResources().getColor(R.color.maroon));
-        
-        //SETUP GUI ELEMENTS------------------------------------------
-        courseName = (EditText) view.findViewById(R.id.courseName);
-        courseCode = (EditText) view.findViewById(R.id.courseCode);
-        teacherName = (EditText) view.findViewById(R.id.teacherName);
-
-        beginTime = (EditText) view.findViewById(R.id.startTime);
-        endTime = (EditText) view.findViewById(R.id.endTime);
-        roomNumber = (EditText) view.findViewById(R.id.roomNumber);
-        
-        buildingSpinner = (Spinner) view.findViewById(R.id.building);
-        spinnerAdapter = ArrayAdapter.createFromResource(this.getSherlockActivity(), 
-        					R.array.buildings_array, 
-        					android.R.layout.simple_spinner_dropdown_item);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        buildingSpinner.setAdapter(spinnerAdapter);
-        buildingString = "";
-        buildingSpinner.setOnItemSelectedListener(new OnItemSelectedListener(){
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view,
-                    int pos, long id) {
-
-                buildingString = parent.getItemAtPosition(pos).toString();
-                
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-
-                buildingString = "";
-            }});
-        
-        mondayBox = (CheckBox) view.findViewById(R.id.mondayBox);
-        tuesdayBox = (CheckBox) view.findViewById(R.id.tuesdayBox);
-        wednesdayBox = (CheckBox) view.findViewById(R.id.wednesdayBox);
-        thursdayBox = (CheckBox) view.findViewById(R.id.thursdayBox);
-        fridayBox = (CheckBox) view.findViewById(R.id.fridayBox);
-        saturdayBox = (CheckBox) view.findViewById(R.id.saturdayBox);
-        sundayBox = (CheckBox) view.findViewById(R.id.sundayBox);
-        
-        return view;
-    }
-	
-	//Interface used to send data through to the Activity
-	public interface ReceiveCreatedCourse {
-		
-		//Takes a UserMadeCourse and a String indicating the days the course occurs on and does something with them
-		public void receiveCreatedCourse(UserMadeCourse course, String daysString);
 	}
 }

@@ -90,8 +90,8 @@ public class VTFinderActivity
      * Constant for preferences file used to store information pertaining 
      * to if this is the first run or not.
      */
-    private final String PREFS_NAME = "MyPrefsFile";
-    private final String QUICK_START_TEXT = "Thank you for downloading VT Finder! \n Please take the time to rate VT Finder in Google Play." +
+    private static final String PREFS_NAME = "MyPrefsFile";
+    private static final String QUICK_START_TEXT = "Thank you for downloading VT Finder! \n Please take the time to rate VT Finder in Google Play." +
     		"\n\nGET STARTED:" +
     		"\n�Change views from 'FINAL EXAMS' to 'SCHEDULE' to 'FREE TIME' by swiping left to right and vice-versa. " +
     		"\n�Get your schedule from hokiespa by clicking \'Get Schedule\' at the bottom of the screen under either the \'SCHEDULE\' or \'FREE TIME\' views. " +
@@ -226,9 +226,9 @@ public class VTFinderActivity
         
         //Add Fragment
         FragmentTransaction fragTrans = this.getSupportFragmentManager().beginTransaction();
-        fragTrans.replace(R.id.base_layout, baseFragment);
+        fragTrans.add(R.id.base_layout, baseFragment);
         fragTrans.commit();
-        getSupportFragmentManager().executePendingTransactions();
+        //getSupportFragmentManager().executePendingTransactions();
         
         //baseFragment.setupScheduleListViews(model.getSchedule());
         //baseFragment.setupExamScheduleListView(model.getFinalsList());
@@ -294,7 +294,6 @@ public class VTFinderActivity
     @Override
     protected void onStart() {
         super.onStart();
-        Log.i(TAG, "onStart: " + getSupportFragmentManager().getFragments());
     }
     
     /**
@@ -303,7 +302,6 @@ public class VTFinderActivity
     @Override
     protected void onResume() {
     	super.onResume();
-    	Log.i(TAG, "onResume: " + getSupportFragmentManager().getFragments());
     }
     
     /**
@@ -396,7 +394,7 @@ public class VTFinderActivity
         setupScheduleListViews();
     }
     
-    private static String CREATE_COURSE_FRAG = "CREATE_COURSE_FRAGMENT";
+    private static final String CREATE_COURSE_FRAG = "CREATE_COURSE_FRAGMENT";
     /**
      * Pops up a box to enter in course data. Creates a course with the corresponding course data.
      * 
@@ -472,7 +470,6 @@ public class VTFinderActivity
     	Log.i(TAG, "Pushing CreateCoureFragment to the pager view....");
     	final String CREATE_COURSE_FRAGMENT_NAME = "CreateCourseFragment"; 
 
-    	SherlockFragment createCourseFragment = new CreateCourseFragment();
     	//Fragment Transaction
     	getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
 			
@@ -483,7 +480,7 @@ public class VTFinderActivity
 				//Base level
 				if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
 					
-					//actionBar.show();
+					showActionBar();
 				}
 				//If top is CreateCourseFragment
 				else if (getSupportFragmentManager()
@@ -491,17 +488,36 @@ public class VTFinderActivity
 						.getName()
 						.equals(CREATE_COURSE_FRAGMENT_NAME)) {
 					
-					//actionBar.hide();
+					hideActionBar();
 				}
 			}
 		});
+
+    	SherlockFragment createCourseFragment = new CreateCourseFragment();
 		FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
-		//fragTrans.remove(arg0);
-		fragTrans.replace(R.id.pager, createCourseFragment, CREATE_COURSE_FRAG);
+		fragTrans.add(R.id.pager, createCourseFragment, CREATE_COURSE_FRAG);
+		//fragTrans.replace(R.id.pager, createCourseFragment, CREATE_COURSE_FRAG);
 		fragTrans.addToBackStack(CREATE_COURSE_FRAGMENT_NAME);
 		fragTrans.commit();
-		getSupportFragmentManager().executePendingTransactions();
+		this.getSupportFragmentManager().executePendingTransactions();
+
 		Log.i(TAG, "Pushed CreateCoureFragment to the pager view!");
+    }
+    
+    /**
+     * Shows the actionbar.
+     */
+    private void showActionBar() {
+    	
+    	this.getSupportActionBar().show();
+    }
+    
+    /**
+     * Hides the actionbar.
+     */
+    private void hideActionBar() {
+    	
+    	this.getSupportActionBar().hide();
     }
     
     public void launchLoginDialog() {
@@ -512,6 +528,7 @@ public class VTFinderActivity
      * Parameter-less wrapper for main launchSemesterSelectionDialog method.
      */
     public void launchSemesterSelectionDialog() {
+
     	launchSemesterSelectionDialog(null);
     }
     

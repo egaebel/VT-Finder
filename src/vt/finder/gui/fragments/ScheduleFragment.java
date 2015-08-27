@@ -62,7 +62,7 @@ public class ScheduleFragment extends SherlockFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.schedule_fragment_layout, null);
+        View view = inflater.inflate(R.layout.schedule_fragment_layout___old_version, null);
         return view;
     }
     
