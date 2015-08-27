@@ -381,7 +381,7 @@ public class FileIO {
         // creates an array with the String values of the days of the week
         // used as input for .getElementsByTagName
         String[] days = { "Monday", "Tuesday", "Wednesday", "Thursday",
-                "Friday", "AnyDay" };
+                "Friday", "Saturday", "Sunday", "AnyDay" };
 
         // gets array representation of the days of the week
         // values here will be changed, then values will be updated after
@@ -414,9 +414,6 @@ public class FileIO {
         // teacherName etc
         for (int k = 0; k < theDaysArray.length; k++) {
 
-            
-Log.i(TAG, "k == " + k);
-Log.i(TAG, "day == " + days[k]);
             // Day setting
             dayList = scheduleEl.getElementsByTagName(days[k]);
             dayEl = (Element) dayList.item(0);
@@ -563,7 +560,7 @@ Log.i(TAG, "day == " + days[k]);
             // creates an array with the String values of the days of the week
             // used as input for .getElementsByTagName
             String[] days = { "Monday", "Tuesday", "Wednesday", "Thursday",
-                    "Friday", "AnyDay" };
+                    "Friday", "Saturday", "Sunday", "AnyDay" };
 
             // gets array representation of the days of the week
             // values here will be changed, then values will be updated after

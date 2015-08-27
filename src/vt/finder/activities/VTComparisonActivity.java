@@ -2,11 +2,12 @@ package vt.finder.activities;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import vt.finder.gui.CompFreeTimeFragment;
-import vt.finder.gui.CompScheduleFragment;
+
 import vt.finder.gui.CourseComm;
 import vt.finder.gui.VTFinderFragmentAdapter;
 import vt.finder.gui.NoSwipeViewPager;
+import vt.finder.gui.fragments.CompFreeTimeFragment;
+import vt.finder.gui.fragments.CompScheduleFragment;
 import vt.finder.main.ScheduleComparison;
 import vt.finder.schedule.Course;
 import vt.finder.schedule.Schedule;

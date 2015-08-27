@@ -29,6 +29,7 @@ import vt.finder.schedule.Schedule;
 public class ScheduleScraper {
 
     //~Constants--------------------------------------------
+	private static final String TAG = "SCHEDULE SCRAPER";
     /**
      * The URL for the page before the HOKIESPA constant's URL where the cookies are updated.
      */                                      
@@ -142,8 +143,7 @@ public class ScheduleScraper {
                     // to get the cookies that are updated with the click
                     Response hokieResp = Jsoup
                             .connect(HOKIESTOP + semesterCode + ENDOFURL)
-                            .cookie("IDMSESSID", cookies.get("IDMSESSID"))
-                            .cookie("SESSID", cookies.get("SESSID"))
+                            .cookies(cookies)
                             .userAgent(AGENTS)
                             .method(Method.GET)
                             .execute();
@@ -317,25 +317,34 @@ public class ScheduleScraper {
                 }
                 else {
                     
+                	Cas.logout();
+                    Log.i(TAG, "Retrieve schedule, no IDMSESSID cookie failure");
                     return false;
                 }
     
+                Cas.logout();
+                Log.i(TAG, "Retrieve schedule SUCCESS");
                 return true;
             }
             catch (FileNotFoundException e) {
+            	Log.i(TAG, "FileNotFoundException");
                 e.printStackTrace();
             }
             catch (SecurityException e) {
+            	Log.i(TAG, "SecurityException");
                 e.printStackTrace();
             }
             catch (UnknownHostException e) {
+            	Log.i(TAG, "UnknownHostException");
                 e.printStackTrace();
             }
             catch (IOException e) {
+            	Log.i(TAG, "IOException");
                 e.printStackTrace();
             }
         }
         
+        Log.i(TAG, "Retrieve schedule FAILURE");
         return false;
     }
     
@@ -371,8 +380,7 @@ public class ScheduleScraper {
                     // to get the cookies that are updated with the click
                     Response hokieResp = Jsoup
                             .connect(HOKIESTOP + semesterCode + ENDOFURL)
-                            .cookie("IDMSESSID", cookies.get("IDMSESSID"))
-                            .cookie("SESSID", cookies.get("SESSID"))
+                            .cookies(cookies)
                             .userAgent(AGENTS)
                             .method(Method.GET)
                             .execute();
@@ -382,8 +390,7 @@ public class ScheduleScraper {
                     // go to the detailed schedule page
                     Document hokieDoc = Jsoup
                             .connect(HOKIESPA + semesterCode + PRINT_FRIENDLY)
-                            .cookie("IDMSESSID", cookies.get("IDMSESSID"))
-                            .cookie("SESSID", cookies.get("SESSID"))
+                            .cookies(cookies)
                             .userAgent(AGENTS)
                             .referrer(HOKIESTOP + semesterCode + ENDOFURL)
                             .post();
@@ -434,11 +441,13 @@ public class ScheduleScraper {
                         }
                     }
         
+                    Log.i(TAG, "Retrieve exam schedule SUCCESS");
                     return true;
                 }
                 else {
                     
                     Cas.logout();
+                    Log.i(TAG, "Retrieve exam schedule, no IDMSESSID cookie failure");
                     return false;
                 }
             }
@@ -446,10 +455,12 @@ public class ScheduleScraper {
     
                 e.printStackTrace();
     
+                Log.i(TAG, "Retrieve exam schedule IOException failure");
                 return false;
             }
         }
         
+        Log.i(TAG, "Retrieve exam schedule general failure");
         return false;
     }
 
@@ -496,9 +507,9 @@ public class ScheduleScraper {
                                         + semesterCode.substring(4, 6) + BEFORE_YEAR 
                                         + semesterCode.substring(0, 4)
                                         + BEFORE_EXAMNUM + examID)
-                        .cookie("IDMSESSID", cookies.get("IDMSESSID"))
-                        .cookie("SESSID", cookies.get("SESSID"))
-                        .referrer(HOKIESTOP + semesterCode + ENDOFURL).get();
+                        .cookies(cookies)
+                        .referrer(HOKIESTOP + semesterCode + ENDOFURL)
+                        .get();
     
                 Elements rows = examDoc.select("body table tr");
     

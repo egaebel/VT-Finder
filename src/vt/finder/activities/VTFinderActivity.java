@@ -2,11 +2,14 @@ package vt.finder.activities;
 
 //Internal Imports
 import vt.finder.gui.CourseComm;
-import vt.finder.gui.ExamScheduleFragment;
-import vt.finder.gui.FreeTimeFragment;
 import vt.finder.gui.VTFinderFragmentAdapter;
 import vt.finder.gui.NoSwipeViewPager;
-import vt.finder.gui.ScheduleFragment;
+import vt.finder.gui.fragments.BaseFragment;
+import vt.finder.gui.fragments.CreateCourseFragment;
+import vt.finder.gui.fragments.CreateCourseFragment.ReceiveCreatedCourse;
+import vt.finder.gui.fragments.ExamScheduleFragment;
+import vt.finder.gui.fragments.FreeTimeFragment;
+import vt.finder.gui.fragments.ScheduleFragment;
 import vt.finder.io.PasswordIO;
 import vt.finder.main.BuildingGpsMap;
 import vt.finder.main.ScheduleWaypoint;
@@ -18,19 +21,30 @@ import vt.finder.R;
 import vt.finder.web.BuildingNotFoundException;
 import vt.finder.main.SMSHandler; /* REQUIRES TELEPHONY FEATURES */
 
+
+
+
 //Java Imports
 import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
+
+
+
 //ActionBar Sherlock Imports
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+
+
+
 
 //Android Imports
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -47,16 +61,15 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.ContactsContract;
 import android.provider.Settings;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,7 +80,7 @@ import android.widget.Toast;
  * @author Ethan Gaebel (egaebel)
  *
  */
-public class VTFinderActivity extends SherlockFragmentActivity implements CourseComm {
+public class VTFinderActivity extends SherlockFragmentActivity implements CourseComm, ReceiveCreatedCourse {
 
     //~Constants---------------------------------------------------------//
     private static final String TAG = "VT ORIENTATION ACTIVITY";
@@ -153,9 +166,13 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
      */
     private Course selection;
     /**
-     * A direct reference to this very object. Used to reference the object inside classes inside this class. Since "this" cannot be used.
+     * The ActionBar UI element.
      */
-    private VTFinderActivity thisActivity;
+    private ActionBar actionBar;
+    /**
+     * The BaseFragment that is the root element of the entire UI.
+     */
+    private BaseFragment baseFragment;
     
     //~Lifecycle Methods------------------------------------------------------//
     @Override
@@ -164,26 +181,21 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vtfinder);
         
-        thisActivity = this;
-        
-        //initialize async task switches to false
-        scheduleScraping = false;
-        examScheduleScraping = false;
-        
-        //ViewPagers setup.
+        /*
+        //NO SWIPE ViewPagers setup.
         pager = new NoSwipeViewPager(this.getBaseContext());
         pager.setId(R.id.pager);
         setContentView(pager);
-        
-        //ActionBar setup
-        final ActionBar bar = getSupportActionBar();
-        bar.setDisplayShowHomeEnabled(false);
-        bar.setDisplayShowTitleEnabled(false);
-        bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        bar.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
-        
         //FragmentPagerAdapter setup.
         fragAdapt = new VTFinderFragmentAdapter(this, pager);
+        
+        //ActionBar setup
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
+        */
         
         // setup password saving stuff
         File passwordFile = new File(getFilesDir(), "password_file.txt");
@@ -191,7 +203,6 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
 
         // Get path for the file on external storage. If external
         // storage is not currently mounted this will fail.
-        
         File schedulesFile = new File(getFilesDir(), "test_file.xml");
         File examsFile = new File (getFilesDir(), "exams_file.xml");
         
@@ -231,6 +242,21 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
             model = new ScheduleWaypoint(schedulesFile, examsFile);
         }
         
+        //Create BaseFragment, and setup arguments------------------------------
+        baseFragment = new BaseFragment();
+        Bundle dataBundle = new Bundle();
+        dataBundle.putParcelable("schedule", model.getSchedule());
+        dataBundle.putParcelableArrayList("finalsList", model.getFinalsList());
+        dataBundle.putParcelable("freeTime", model.getSchedule().findFreeTime());
+        baseFragment.setArguments(dataBundle);
+        
+        //Add Fragment
+        FragmentTransaction fragTrans = this.getSupportFragmentManager().beginTransaction();
+        fragTrans.replace(R.id.base_layout, baseFragment);
+        fragTrans.commit();
+        getSupportFragmentManager().executePendingTransactions();
+        
+        /*
         //Create bundles to pass to the TabInfos.
         Bundle scheduleBundle = new Bundle();
         scheduleBundle.putParcelable("schedule", model.getSchedule());
@@ -240,17 +266,20 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
         freeTimeBundle.putParcelable("freeTime", model.getSchedule().findFreeTime());
 
         //Create/add tabs and Fragments, and set text, and set first visible object.
-        Tab scheduleTab = bar.newTab().setText("Schedule");
-        fragAdapt.addTab(bar.newTab().setText("Final Exams"), ExamScheduleFragment.class, finalExamBundle);
+        Tab scheduleTab = actionBar.newTab().setText("Schedule");
+        fragAdapt.addTab(actionBar.newTab().setText("Final Exams"), ExamScheduleFragment.class, finalExamBundle);
         fragAdapt.addTab(scheduleTab, ScheduleFragment.class, scheduleBundle);
-        fragAdapt.addTab(bar.newTab().setText("Free Time"), FreeTimeFragment.class, freeTimeBundle);
-        bar.selectTab(scheduleTab);
+        fragAdapt.addTab(actionBar.newTab().setText("Free Time"), FreeTimeFragment.class, freeTimeBundle);
+        actionBar.selectTab(scheduleTab);
+        */
                 
+        /*
         //If previously used, set to tab that was previously on.
         if (savedInstanceState != null) {
             
-            bar.setSelectedNavigationItem(savedInstanceState.getInt("tab", 1));
+        	actionBar.setSelectedNavigationItem(savedInstanceState.getInt("tab", 1));
         }
+        */
 
         //start service
         Intent service = new Intent(this.getBaseContext(),
@@ -273,6 +302,10 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
             editor.putBoolean("dialogShown", true);
             editor.commit();    
         }
+        
+        //initialize async task switches to false
+        scheduleScraping = false;
+        examScheduleScraping = false;
     }
     
     /**
@@ -299,6 +332,23 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
         
         AlertDialog startAlertDialog = alert.create();
         startAlertDialog.show();
+    }
+    
+    /**
+     * Defines activity behavior on resume.
+     */
+    @Override
+    protected void onResume() {
+    	super.onResume();
+    }
+    
+    /**
+     * Defines activity behavior on suspension
+     */
+    @Override
+    protected void onPause() {
+    	super.onPause();
+    	model.saveAll();
     }
     
     /**
@@ -340,11 +390,13 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
      */
     protected void setupExamScheduleListView() {
 
+    	/*
         if (model.getFinalsList() != null) {
             
             ExamScheduleFragment sched = (ExamScheduleFragment) getSupportFragmentManager().findFragmentByTag(fragAdapt.getFragmentTag(0));
             sched.updateExamList(model.getFinalsList());
         }
+        */
     }
     
     /**
@@ -352,6 +404,7 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
      */
     protected void setupScheduleListViews() {
 
+    	/*
         if (model.getSchedule() != null) {
             ScheduleFragment sched = (ScheduleFragment) getSupportFragmentManager().findFragmentByTag(fragAdapt.getFragmentTag(1));
             sched.updateSchedule(model.getSchedule());
@@ -361,16 +414,25 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
             FreeTimeFragment freeTime = (FreeTimeFragment) getSupportFragmentManager().findFragmentByTag(fragAdapt.getFragmentTag(2));
             freeTime.updateSchedule(model.getSchedule().findFreeTime());
         }
+        */
     }
     
     //~Methods---------------------------------------------------------------------------------------//
     /**
-     * Variable used in addCourseClicked method. Must be class visible so that the OnItemSelectedListener can access it.
+     * Takes a UserMadeCourse and a daysString and puts the UserMadeCourse into
+     * the model in the days specified by daysString.
      * 
-     * DO NOT MODIFY OUTSIDE OF "addCourseClicked"
-     * 
+     * @param course the UserMadeCourse that is to be added to the model.
+     * @param daysString a String indicating which days the passed in course occurs on.
      */
-    private String buildingString;
+    public void receiveCreatedCourse(UserMadeCourse course, String daysString) {
+    	
+    	//Add and refresh
+        model.addUserMadeCourse(course, daysString);
+        setupScheduleListViews();
+    }
+    
+    private static String CREATE_COURSE_FRAG = "CREATE_COURSE_FRAGMENT";
     /**
      * Pops up a box to enter in course data. Creates a course with the corresponding course data.
      * 
@@ -378,156 +440,42 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
      */
     public void addCourseClicked(View view) {
     
+    	//Create a Course/On Campus EVENT----------------------------------------------------------------------
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View layout = inflater.inflate(R.layout.course_addition_dialog, null);
+        final View layout = inflater.inflate(R.layout.course_addition_selection_dialog, null);
         layout.setBackgroundColor(this.getResources().getColor(R.color.maroon));
         final AlertDialog.Builder alert = new AlertDialog.Builder(this).setView(layout);
         
         alert.setTitle("Create a Course/VT Event");
         
-        final EditText courseName = (EditText) layout.findViewById(R.id.courseName);
-        final EditText courseCode = (EditText) layout.findViewById(R.id.courseCode);
-        final EditText teacherName = (EditText) layout.findViewById(R.id.teacherName);
-        Log.i(TAG, "right before the crash......fucking hell.....");
-        Log.i(TAG, "the value of the result == " + layout.findViewById(R.id.startTime));
-        final EditText beginTime = (EditText) layout.findViewById(R.id.startTime);
-        final EditText endTime = (EditText) layout.findViewById(R.id.endTime);
-        final EditText roomNumber = (EditText) layout.findViewById(R.id.roomNumber);
-        
-        final Spinner buildingSpinner = (Spinner) layout.findViewById(R.id.building);
-        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, 
-                R.array.buildings_array, 
-                android.R.layout.simple_spinner_dropdown_item);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        buildingSpinner.setAdapter(spinnerAdapter);
-        buildingString = "";
-        buildingSpinner.setOnItemSelectedListener(new OnItemSelectedListener(){
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view,
-                    int pos, long id) {
-
-                buildingString = parent.getItemAtPosition(pos).toString();
-                
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-
-                buildingString = "";
-            }});
-        
-        final CheckBox mondayBox = (CheckBox) layout
-                .findViewById(R.id.mondayBox);
-        final CheckBox tuesdayBox = (CheckBox) layout
-                .findViewById(R.id.tuesdayBox);
-        final CheckBox wednesdayBox = (CheckBox) layout
-                .findViewById(R.id.wednesdayBox);
-        final CheckBox thursdayBox = (CheckBox) layout
-                .findViewById(R.id.thursdayBox);
-        final CheckBox fridayBox = (CheckBox) layout
-                .findViewById(R.id.fridayBox);
-        final CheckBox saturdayBox = (CheckBox) layout
-                .findViewById(R.id.saturdayBox);
-        final CheckBox sundayBox = (CheckBox) layout
-                .findViewById(R.id.sundayBox);
         
         alert.setPositiveButton("Submit",
                 new DialogInterface.OnClickListener() {
-                    
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        
-                        String[] courseCodeSplit = courseCode.getText().toString().trim().split(" ");
-                        
-                        if (courseName.getText().toString().trim().equals("")) {
-                            
-                            Toast.makeText(thisActivity, "Your course needs a name!!!", Toast.LENGTH_LONG).show();
-                        }
-                        else if (beginTime.getText().toString().trim().equals("")) {
-                            
-                            Toast.makeText(thisActivity, "Your course needs a starting time!!!", Toast.LENGTH_LONG).show();
-                        }
-                        else if (endTime.getText().toString().trim().equals("")) {
-                            
-                            Toast.makeText(thisActivity, "Your course needs an ending time!!!", Toast.LENGTH_LONG).show();
-                        }
-                        else if (!(mondayBox.isChecked() 
-                                || tuesdayBox.isChecked() 
-                                || wednesdayBox.isChecked() 
-                                || thursdayBox.isChecked() 
-                                || fridayBox.isChecked() 
-                                || saturdayBox.isChecked() 
-                                || sundayBox.isChecked())) {
-                            
-                            Toast.makeText(thisActivity,  
-                                    "Your course needs to occur on a day!", 
-                                    Toast.LENGTH_LONG).show();
-                        }
-                        else if (courseCodeSplit.length != 2 
-                                && courseCodeSplit.length != 0
-                                && !(courseCodeSplit.length == 1 && courseCodeSplit[0] == "")) {
-                            
-                            Toast.makeText(thisActivity, 
-                                    "Your course code must have the subject code followed" +
-                                    " by the course number. For example: CS 3114, CS 3214, MATH 4175", 
-                                    Toast.LENGTH_LONG).show();
-                        }
-                        else {
-                            
-                            String daysString = "";
-                            
-                            if (mondayBox.isChecked()) {
-                                
-                                daysString += "M";
-                            }
-                            else if (tuesdayBox.isChecked()) {
-                                
-                                daysString += "T";
-                            }
-                            else if (wednesdayBox.isChecked()) {
-                                
-                                daysString += "W";
-                            }
-                            else if (thursdayBox.isChecked()) {
-                                
-                                daysString += "R";
-                            }
-                            else if (fridayBox.isChecked()) {
-                                
-                                daysString += "F";
-                            }
-                            else if (saturdayBox.isChecked()) {
-                                
-                                //daysString += "S";
-                            }
-                            else if (sundayBox.isChecked()) {
-                                
-                                //daysString += "Su";
-                            }
-                            //TODO: Add other days (Saturday & Sunday)
-                            
-                            String subjectCode = "";
-                            String courseNumber = "";
-                            if (courseCodeSplit.length == 2) {
-                                subjectCode = courseCodeSplit[0];
-                                courseNumber = courseCodeSplit[1];
-                            }
-                            
-                            UserMadeCourse course = new UserMadeCourse(
-                                                            courseName.getText().toString(), 
-                                                            teacherName.getText().toString(), 
-                                                            subjectCode, 
-                                                            courseNumber, 
-                                                            beginTime.getText().toString(), 
-                                                            endTime.getText().toString(),
-                                                            buildingString.toString(), 
-                                                            roomNumber.getText().toString());
-                           
-                            //Add and refresh
-                            model.addUserMadeCourse(course, daysString);
-                            setupScheduleListViews();
-                        }
-                    }
+
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+
+						//Either pull schedule
+						final RadioButton timetable = (RadioButton) layout.findViewById(R.id.timetableRadioButton);
+						final RadioButton customCourse = (RadioButton) layout.findViewById(R.id.customCourseRadioButton);
+						
+						//Next Dialog box
+						if (timetable.isChecked()) {
+							
+							launchSemesterSelectionDialog();
+							//Scrape
+						}
+						//Launch Custom Course Fragment
+						else if (customCourse.isChecked()) {
+							
+							pushCreateCourseFragment();
+						}
+						else {
+							
+							mustSelectCourseSelectionToast();
+						}
+					}
+                         
                 });
         
         alert.setNegativeButton("Cancel",
@@ -540,6 +488,145 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
                 });
         
         alert.show();
+    }
+    
+    /**
+     * Display a toast used in adding extra course dialog.
+     */
+    private void mustSelectCourseSelectionToast() {
+    	
+    	Toast.makeText(this, 
+				"You must select either Timetable or Custom Course", 
+				Toast.LENGTH_LONG).show();
+    }
+    
+    /**
+     * Creates a new instance of the CreateCourseFragment and pushes it onto the top of the stack.
+     */
+    private void pushCreateCourseFragment() {
+    	
+    	Log.i(TAG, "Pushing CreateCoureFragment to the pager view....");
+    	final String CREATE_COURSE_FRAGMENT_NAME = "CreateCourseFragment"; 
+
+    	SherlockFragment createCourseFragment = new CreateCourseFragment();
+    	//Fragment Transaction
+    	getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+			
+			@Override
+			public void onBackStackChanged() {
+			
+				Log.i(TAG, "BackStackEntryCount == " + getSupportFragmentManager().getBackStackEntryCount());
+				//Base level
+				if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+					
+					actionBar.show();
+				}
+				//If top is CreateCourseFragment
+				else if (getSupportFragmentManager()
+						.getBackStackEntryAt((getSupportFragmentManager().getBackStackEntryCount() - 1))
+						.getName()
+						.equals(CREATE_COURSE_FRAGMENT_NAME)) {
+					
+					actionBar.hide();
+				}
+			}
+		});
+		FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
+		//fragTrans.remove(arg0);
+		fragTrans.replace(R.id.pager, createCourseFragment, CREATE_COURSE_FRAG);
+		fragTrans.addToBackStack(CREATE_COURSE_FRAGMENT_NAME);
+		fragTrans.commit();
+		getSupportFragmentManager().executePendingTransactions();
+		Log.i(TAG, "Pushed CreateCoureFragment to the pager view!");
+    }
+    
+    public void launchLoginDialog() {
+    	//TODO: Prompt for login.
+    }
+    
+    /**
+     * Parameter-less wrapper for main launchSemesterSelectionDialog method.
+     */
+    public void launchSemesterSelectionDialog() {
+    	launchSemesterSelectionDialog(null);
+    }
+    
+    /**
+     * Creates a dialog where the user is prompted to enter in the semester they are interested in.
+     * Takes a passedAlert for chaining together dialogs. If there is no dialog to chain, this argument should be null. 
+     * 
+     * @param passedAlert the next Dialog to create.
+     */
+    public void launchSemesterSelectionDialog(final AlertDialog.Builder passedAlert) {
+    	
+    	// --ALERT BOX FOR SEMESTER SELECTION
+        LayoutInflater semesterInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View semesterLayout = semesterInflater.inflate(
+                R.layout.semester_selection_box, null);
+        semesterLayout.setBackgroundColor(this.getResources().getColor(R.color.maroon));
+        AlertDialog.Builder semesterAlert = new AlertDialog.Builder(this)
+                .setView(semesterLayout);
+
+        semesterAlert.setTitle("Semester Selection");
+
+        final RadioButton fall = (RadioButton) semesterLayout
+                .findViewById(R.id.fall);
+        final RadioButton spring = (RadioButton) semesterLayout
+                .findViewById(R.id.spring);
+        final RadioButton summer1 = (RadioButton) semesterLayout
+                .findViewById(R.id.summer1);
+        final RadioButton summer2 = (RadioButton) semesterLayout
+                .findViewById(R.id.summer2);
+
+        semesterAlert.setPositiveButton("Submit",
+                new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+
+                        if (fall.isChecked()) {
+
+                            semester = "09";
+                        }
+                        else if (spring.isChecked()) {
+
+                            semester = "01";
+                        }
+                        else if (summer1.isChecked()) {
+
+                            semester = "06";
+                        }
+                        else if (summer2.isChecked()) {
+
+                            semester = "07";
+                        }
+                        else {
+
+                            // if something went wrong, default to fall, cus the
+                            // freshies wont know whats what
+                            semester = "09";
+                        }
+
+                        //If we were passed another AlertDialog to initiate....
+                        if (passedAlert != null) {
+	                        AlertDialog alertDialog = passedAlert.create();
+	                        alertDialog.show();
+                        }
+                    }
+                });
+
+        semesterAlert.setNegativeButton("Do later",
+                new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+
+                        dialog.cancel();
+                    }
+                });
+
+        // box is created later, right after login box is
+
+        AlertDialog semesterAlertDialog = semesterAlert.create();
+        semesterAlertDialog.show();
     }
     
     /**
@@ -608,7 +695,7 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
                             new ScheduleScrapeTask().execute(user.getText().toString(), 
                                     password.getText().toString(), semester, getFilesDir().toString());
                             
-                            Toast.makeText(thisActivity, "Grabbing schedule, please wait...", Toast.LENGTH_LONG).show();
+                            grabbingScheduleToast();
                         }
     
                     });
@@ -622,77 +709,24 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
                         }
                     });
             
-            // --ALERT BOX FOR SEMESTER SELECTION
-            LayoutInflater semesterInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View semesterLayout = semesterInflater.inflate(
-                    R.layout.semester_selection_box, null);
-            semesterLayout.setBackgroundColor(this.getResources().getColor(R.color.maroon));
-            AlertDialog.Builder semesterAlert = new AlertDialog.Builder(this)
-                    .setView(semesterLayout);
-    
-            semesterAlert.setTitle("Semester Selection");
-    
-            final RadioButton fall = (RadioButton) semesterLayout
-                    .findViewById(R.id.fall);
-            final RadioButton spring = (RadioButton) semesterLayout
-                    .findViewById(R.id.spring);
-            final RadioButton summer1 = (RadioButton) semesterLayout
-                    .findViewById(R.id.summer1);
-            final RadioButton summer2 = (RadioButton) semesterLayout
-                    .findViewById(R.id.summer2);
-    
-            semesterAlert.setPositiveButton("Submit",
-                    new DialogInterface.OnClickListener() {
-    
-                        public void onClick(DialogInterface dialog, int whichButton) {
-    
-                            if (fall.isChecked()) {
-    
-                                semester = "09";
-                            }
-                            else if (spring.isChecked()) {
-    
-                                semester = "01";
-                            }
-                            else if (summer1.isChecked()) {
-    
-                                semester = "06";
-                            }
-                            else if (summer2.isChecked()) {
-    
-                                semester = "07";
-                            }
-                            else {
-    
-                                // if something went wrong, default to fall, cus the
-                                // freshies wont know whats what
-                                semester = "09";
-                            }
-    
-                            AlertDialog alertDialog = alert.create();
-                            alertDialog.show();
-                        }
-                    });
-    
-            semesterAlert.setNegativeButton("Do later",
-                    new DialogInterface.OnClickListener() {
-    
-                        public void onClick(DialogInterface dialog, int whichButton) {
-    
-                            dialog.cancel();
-                        }
-                    });
-    
-            // box is created later, right after login box is
-    
-            AlertDialog semesterAlertDialog = semesterAlert.create();
-            semesterAlertDialog.show();
+            //Launch the semester Selection
+            launchSemesterSelectionDialog(alert);
         }
         else {
             
             Toast.makeText(this, "Wait for schedule scraping to " +
             		"complete before trying to do so again.", Toast.LENGTH_LONG).show();
         }
+    }
+    
+    /**
+     * Display a toast indicating that the schedule is being grabbed 
+     */
+    private void grabbingScheduleToast() {
+    	
+    	Toast.makeText(this, 
+    			"Grabbing schedule, please wait...", 
+    			Toast.LENGTH_LONG).show();
     }
     
     /**
@@ -755,7 +789,7 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
                             new ExamScrapeTask().execute(user.getText().toString(), 
                                     password.getText().toString(), semester, getFilesDir().toString());
                             
-                            Toast.makeText(thisActivity, "Grabbing final exam schedule, please wait....", Toast.LENGTH_LONG).show();
+                            makeGrabbingExamScheduleToast();
                         }
     
                     });
@@ -769,84 +803,7 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
                         }
                     });
     
-            //--Alert Box for semester------------------ 
-            LayoutInflater semesterInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View semesterLayout = semesterInflater.inflate(
-                    R.layout.semester_selection_box, null);
-            semesterLayout.setBackgroundColor(this.getResources().getColor(R.color.maroon));
-            AlertDialog.Builder semesterAlert = new AlertDialog.Builder(this)
-                    .setView(semesterLayout);
-    
-            semesterAlert.setTitle("Semester Selection");
-    
-            final RadioButton fall = (RadioButton) semesterLayout
-                    .findViewById(R.id.fall);
-            final RadioButton spring = (RadioButton) semesterLayout
-                    .findViewById(R.id.spring);
-            final RadioButton summer1 = (RadioButton) semesterLayout
-                    .findViewById(R.id.summer1);
-            final RadioButton summer2 = (RadioButton) semesterLayout
-                    .findViewById(R.id.summer2);
-    
-            semesterAlert.setPositiveButton("Submit",
-                    new DialogInterface.OnClickListener() {
-    
-                        public void onClick(DialogInterface dialog, int whichButton) {
-    
-                            if (fall.isChecked()) {
-    
-                                semester = "09";
-                            }
-                            else if (spring.isChecked()) {
-    
-                                semester = "01";
-                            }
-                            else if (summer1.isChecked()) {
-    
-                                semester = "06";
-                            }
-                            else if (summer2.isChecked()) {
-    
-                                semester = "07";
-                            }
-                            else {
-    
-                                // if something went wrong, default to fall, cus the
-                                // freshies wont know whats what
-                                semester = "09";
-                            }
-                            
-                            //if (model.getFinalsTerm() != null && model.getFinalsTerm().equals(semester)) {
-                                
-                                //TODO ensure this is suitable replacement for
-//                                Intent intent = new Intent(getBaseContext(),
-//                                        VTFinalDisplayActivity.class);
-//                        
-//                                // get the finals list and place in intent
-//                                intent.putExtra("finalsList", model.getFinalsList());
-//                        
-//                                startActivity(intent);
-                                getSupportActionBar().setSelectedNavigationItem(0);
-                            //}
-                            //else {
-                                //model.setFinalsTerm(semester);
-                                AlertDialog alertDialog = alert.create();
-                                alertDialog.show();
-                            //}
-                        }
-                    });
-    
-            semesterAlert.setNegativeButton("Do later",
-                    new DialogInterface.OnClickListener() {
-    
-                        public void onClick(DialogInterface dialog, int whichButton) {
-    
-                            dialog.cancel();
-                        }
-                    });
-            
-            AlertDialog semesterAlertDialog = semesterAlert.create();
-            semesterAlertDialog.show();
+            this.launchSemesterSelectionDialog(alert);
         }
         else {
             
@@ -854,6 +811,16 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
         }
     }
 
+    /**
+     * Display a toast indicating the final exam schedule is being grabbed.
+     */
+    private void makeGrabbingExamScheduleToast() {
+    	
+    	Toast.makeText(this, 
+    			"Grabbing final exam schedule, please wait....", 
+    			Toast.LENGTH_LONG).show();
+    }
+    
     /**
      * executed when "Take me to Class" is clicked, switches view to a google
      * maps view that maps the user to their selected class
@@ -1339,7 +1306,7 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
         selection = course;
     }
     
-    //~Async Tasks--------
+    //~Async Tasks------------------------------------------------
     /**
      * Boolean variable identifying whether ScheduleScrapeTask 
      * is running currently or not. True if running, false if not.
@@ -1350,6 +1317,11 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
      * currently running or not. True if running, false if not.
      */
     private boolean examScheduleScraping;
+    /**
+     * Boolean variable identifying whether the TimetableScrapeTask 
+     * is currently running or not. True if running, false if not.
+     */
+    private boolean timetableScraping;
     /**
      * Asynchronous task that performs schedule scraping.
      * 
@@ -1370,7 +1342,7 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
             
             if (value) {
                 
-                setupScheduleListViews();
+                baseFragment.setupScheduleListViews(model.getSchedule());
             }
             else {
                 
@@ -1402,7 +1374,7 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
             
           if (value) {  
               
-              setupExamScheduleListView();
+              baseFragment.setupExamScheduleListView(model.getFinalsList());
           }
           else {
               
@@ -1412,5 +1384,33 @@ public class VTFinderActivity extends SherlockFragmentActivity implements Course
           
           examScheduleScraping = false;
         }
+    }
+    
+    private class TimetableScrapeTask extends AsyncTask<String, Integer, Boolean> {
+    	
+    	@Override
+    	protected Boolean doInBackground(String... params) {
+    		
+    		timetableScraping = true;
+    		//scrape stuff by either CRN or course code
+    		//TODO
+    		return false;
+    	}
+    	
+    	@Override
+    	protected void onPostExecute(Boolean value) {
+    		
+    		if (value) {
+    			
+    			//Do something....
+    		}
+    		else {
+    			
+    			Toast.makeText(getBaseContext(), "You entered in an invalid CRN or course code. Or your connection could not be established. Please try again.", 
+    					Toast.LENGTH_LONG).show();
+    		}
+    		
+    		timetableScraping = false;
+    	}
     }
 }

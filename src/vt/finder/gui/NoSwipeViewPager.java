@@ -2,6 +2,7 @@ package vt.finder.gui;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.MotionEvent;
 
 
@@ -18,6 +19,7 @@ public class NoSwipeViewPager extends ViewPager {
     public NoSwipeViewPager(Context context) {
 
         super(context);
+        Log.i("NO SWIPE VIEW PAGER", "Constructor called");
     }
 
     //~Methods-------------------------------------------------

@@ -52,6 +52,24 @@ public class Day implements Parcelable {
 
         daily.add(addingCourse);
     }
+    
+    /**
+     * Takes in the passed newCourse Course object and adds it to the appropriate position amongst the other courses, sorted by begin time.
+     * 
+     * @param newCourse the Course to add to this Day to maintain a sort.
+     */
+    public void addCourseInSort(Course newCourse) {
+    	
+    	int insertionIndex = 0;
+    	for (int i = 0; i < daily.size(); i++, insertionIndex++) {
+    		
+    		if (newCourse.getCoursePoint().getX() <= daily.get(i).getCoursePoint().getX()) {
+    			
+    			daily.add(insertionIndex, newCourse);
+    			break;
+    		}
+    	}
+    }
 
     /**
      * adds the passed course to this object's daily course list

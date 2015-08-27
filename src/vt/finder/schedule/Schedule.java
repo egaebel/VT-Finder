@@ -121,6 +121,29 @@ public class Schedule implements Parcelable {
 
     // ~Methods-------------------------------------------------------------------------------------
     /**
+     * Gets the number of days that have courses. No matter what, M,T,W,R,F is included in this count.
+     * If there are courses on Saturday, Sunday, and/or anyday then there will be 1 added to 5 for each of these that 
+     * has courses.
+     * 
+     * @return the number of days with courses in this schedule.
+     */
+    public int size() {
+    	
+    	int size = 5;
+    	
+    	if (saturday.getList().size() != 0) {
+    		size++;
+    	}
+    	if (sunday.getList().size() != 0) {
+    		size++;
+    	}
+    	if (anyDay.getList().size() != 0) {
+    		size++;
+    	}
+    	
+    	return size;
+    }
+    /**
      * set the owner of this schedule's name
      * 
      * @param name
@@ -285,6 +308,63 @@ public class Schedule implements Parcelable {
         }
     }
 
+    /**
+     * takes in a string representing to the days that a course object is held in, 
+     * as well as a course object itself
+     * 
+     * @param days a string of characters where each day is represented by a letter
+     *      M = monday
+     *      T = tuesday
+     *      W = wednesday
+     *      R = thursday
+     *      F = friday
+     *      S = saturday
+     *      Su = sunday
+     *      else = anyDay
+     */
+    public void setCourseInDaysInSort(Course course, String days) {
+Log.i(TAG, "=\n=\n=\n=\n=======================\nSET COURSE IN DAYS IN SORT CALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLED\n\n\n\n\n\n\n\n");
+        for (int i = 0; i < days.length(); i++) {
+            
+            if (days.substring(i, i + 1).equals("M")) {
+                monday.addCourseInSort(course);
+Log.i(TAG, "added a course to MONDAY!");
+            }
+            else if (days.substring(i, i + 1).equals("T")) {
+                tuesday.addCourseInSort(course);
+Log.i(TAG, "added a course to TUESDAY!");
+            }
+            else if (days.substring(i, i + 1).equals("W")) {
+                wednesday.addCourseInSort(course);
+Log.i(TAG, "added a course to WEDNESDAY!");
+            }
+            else if (days.substring(i, i + 1).equals("R")) {
+                thursday.addCourseInSort(course);
+Log.i(TAG, "added a course to THURSDAY!");
+            }
+            else if (days.substring(i, i + 1).equals("F")) {
+                friday.addCourseInSort(course);
+Log.i(TAG, "added a course to FROEDNDAY!");
+            }
+            else if (days.substring(i, i + 1).equals("S")) {
+                if (days.substring(i + 1, i + 2).equals("u")) {
+                    sunday.addCourseInSort(course);
+Log.i(TAG, "added a course to SUNDAY!");
+                    i++;
+                }
+                else {
+                    saturday.addCourseInSort(course);
+Log.i(TAG, "added a course to SATURDAY!");                    
+                }
+            }
+            else {
+                anyDay.addCourseInSort(course);
+Log.i(TAG, "added a course to ANYDAY!");
+                break;
+            }
+        }
+    }
+    
     /**
      * returns a Day object based on the index passed in
      * 

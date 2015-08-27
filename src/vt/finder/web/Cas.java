@@ -32,6 +32,7 @@ import android.util.Log;
 public class Cas {
 
     //~Constants-----------------------------------------------
+	private static final String TAG = "CAS";
     /**
      * the users agents to pass along with the response
      */
@@ -173,7 +174,7 @@ public class Cas {
                 Response resp = Jsoup
                         .connect(LOGIN)
                         .data(hiddenFields)
-                        .cookie("JSESSIONID", cookies.get("JSESSIONID"))
+                        .cookies(cookies)
                         .method(Method.GET)
                         .header("Content-Type", "application/x-www-form-urlencoded")
                         .referrer(LOGIN)
@@ -239,19 +240,20 @@ public class Cas {
                             .userAgent(AGENTS).execute();
 
                     cookies.putAll(resp.cookies());*/
-//Log.i("DEBUGGER", "DAT ELSED LOGIN TEXT\n" + resp.parse().toString());
                 }
     
                 active = true;
-Log.i("DEBUGGER", "FUCKING LOGGED IN, FUCK YEAH!!!!!!!");
+                Log.i(TAG, "Login success!!");
 
                 return true;
             }
         }
         catch (IOException e) {
+        	Log.i(TAG, "IOException");
             e.printStackTrace();
         }
 
+        Log.i(TAG, "Login FAILURE");
         return false;
     }
 
@@ -268,7 +270,8 @@ Log.i("DEBUGGER", "FUCKING LOGGED IN, FUCK YEAH!!!!!!!");
             
             // logs out of CAS. closing the session
             Jsoup.connect(CAS_LOGOUT).post();
-
+            
+            Log.i(TAG, "LogOUT success!!");
             return true;
         }
         catch (IOException e) {

@@ -132,9 +132,7 @@ public class ScheduleWaypoint extends Observable implements Parcelable {
      *          E.X: MWF (monday wednesday friday) or MR (monday thursday)
      */
     public void addUserMadeCourse(UserMadeCourse userMadeCourse, String daysString) {
-        schedule.setCourseInDays(userMadeCourse, daysString);
-        Log.i(TAG, "THE SCHEDULE AFTER ADDING THE USERMADE COURSE");
-        Log.i(TAG, schedule.toXML());
+        schedule.setCourseInDaysInSort(userMadeCourse, daysString);
     }
     
     /**
@@ -514,7 +512,6 @@ public class ScheduleWaypoint extends Observable implements Parcelable {
      */
     public void saveAll() {
 
-        Log.i(TAG, "saveAll called");
         if (schedule != null) {
 
             readWrite.save(schedule, buddies);

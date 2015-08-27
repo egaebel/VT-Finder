@@ -110,7 +110,7 @@
         <EditText
             android:id="@+id/roomNumber"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="8dp"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/TextView06"
             android:layout_marginLeft="24dp"

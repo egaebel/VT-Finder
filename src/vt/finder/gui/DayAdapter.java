@@ -102,12 +102,7 @@ public final class DayAdapter extends PagerAdapter implements ViewPager.OnPageCh
     @Override
     public int getCount() {
         
-        if (schedule.getAnyDay().getList().isEmpty()) {            
-            return 5;
-        }
-        else {
-            return 6;
-        }
+    	return schedule.size();
     }
     
     @Override
